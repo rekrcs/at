@@ -2,6 +2,7 @@ package com.sbs.byk.at.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sbs.byk.at.dto.Article;
 import com.sbs.byk.at.service.ArticleService;
@@ -38,22 +41,22 @@ public class ArticleController {
 		return "article/detail";
 	}
 
-	@RequestMapping("/article/write")
-	public String showWrite(Model model) {
-		return "article/write";
-
+	@RequestMapping("/article/add")
+	public String showAdd() {
+		return "article/add";
 	}
 
-	@RequestMapping("/article/doWrite")
-	public String doWrite(Model model, String title, String body) {
-		articleService.write(title, body);
-		
-		String msg = id + "번 게시물이 수정되었습니다.";
+	@RequestMapping("/article/doAdd")
+	@ResponseBody
+	public String doAdd(@RequestParam Map<String, Object> param) {
+		articleService.add(param);
+
+		String msg = "게시물이 추가되었습니다.";
 
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("alert('" + msg + "');");
-		sb.append("location.replace('./detail?id=" + id + "');");
+		sb.append("location.replace('./list');");
 
 		sb.insert(0, "<script>");
 		sb.append("</script>");
@@ -61,5 +64,4 @@ public class ArticleController {
 		return sb.toString();
 	}
 
-	}
 }

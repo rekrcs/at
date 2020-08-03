@@ -1,6 +1,7 @@
 package com.sbs.byk.at.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,5 +14,7 @@ public interface ArticleDao {
 	Article getOne(long id);
 
 	void write(String title, String body);
+
+	long add(Map<String, Object> param);
 
 }

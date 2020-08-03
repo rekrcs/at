@@ -16,14 +16,14 @@
 		WHERE displayStatus = 1
 		AND id = #{id}
 	</select>
-
-	<insert id="add" parameterType="map" useGeneratedKeys="true"
-		keyProperty="id">
+	
+	<select id="write" parameterType="String">
 		INSERT INTO article
 		SET regDate = NOW(),
 		updateDate = NOW(),
-		displayStatus = 1,
 		title = #{title},
-		body = #{body}
-	</insert>
+		body = #{body},
+		displayStatus = 1
+		
+	</select>
 </mapper>

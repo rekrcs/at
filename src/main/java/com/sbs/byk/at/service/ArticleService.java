@@ -1,12 +1,11 @@
 package com.sbs.byk.at.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dao.ArticleDao;
 import com.sbs.byk.at.dto.Article;
 
@@ -30,8 +29,8 @@ public class ArticleService {
 		return article;
 	}
 
-	public void write(String title, String body) {
-		articleDao.write(title, body);
-
+	public long add(Map<String, Object> param) {
+		long newId = articleDao.add(param);
+		return newId;
 	}
 }
