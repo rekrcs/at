@@ -24,4 +24,14 @@ public class ArticleService {
 
 		return articles;
 	}
+
+	public Article getOne(long id) {
+		Article article = articleDao.getOne(id);
+		return article;
+	}
+
+	public void write(String title, String body) {
+		articleDao.write(title, body);
+
+	}
 }

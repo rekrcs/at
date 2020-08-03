@@ -9,4 +9,21 @@
 		WHERE displayStatus = 1
 		ORDER BY id DESC
 	</select>
+
+	<select id="getOne" parameterType="long" resultType="Article">
+		SELECT *
+		FROM article
+		WHERE displayStatus = 1
+		AND id = #{id}
+	</select>
+	
+	<select id="write" parameterType="String">
+		INSERT INTO article
+		SET regDate = NOW(),
+		updateDate = NOW(),
+		title = #{title},
+		body = #{body},
+		displayStatus = 1
+		
+	</select>
 </mapper>

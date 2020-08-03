@@ -10,4 +10,8 @@ import com.sbs.byk.at.dto.Article;
 public interface ArticleDao {
 	List<Article> getForPrintArticles();
 
+	Article getOne(long id);
+
+	void write(String title, String body);
+
 }

@@ -11,7 +11,13 @@
 	<h1>게시물 리스트</h1>
 
 	<c:forEach items="${articles}" var="article">
-		<div>${article.id} / ${article.regDate} / ${article.title}</div>
+		<div>${article.id} / ${article.regDate} / <a href="detail?id=${article.id}">${article.title}</a></div>
 	</c:forEach>
+	
+	<div class="write-box">
+		<a href="write" class="writeArticle">
+			글쓰기
+		</a>
+	</div>
 </body>
 </html>
