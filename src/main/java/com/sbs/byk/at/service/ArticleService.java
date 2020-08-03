@@ -33,4 +33,9 @@ public class ArticleService {
 		long newId = articleDao.add(param);
 		return newId;
 	}
+
+	public void modify(Map<String, Object> param) {
+		articleDao.modify(param);
+
+	}
 }

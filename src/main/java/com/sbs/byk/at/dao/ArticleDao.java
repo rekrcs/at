@@ -17,4 +17,5 @@ public interface ArticleDao {
 
 	long add(Map<String, Object> param);
 
+	void modify(Map<String, Object> param);
 }
