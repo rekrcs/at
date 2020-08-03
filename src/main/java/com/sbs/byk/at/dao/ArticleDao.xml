@@ -29,9 +29,16 @@
 
 	<update id="modify" parameterType="map">
 		UPDATE article
-		SET title = #{title},
+		SET title =
+		#{title},
 		body = #{body},
 		updateDate = NOW()
 		WHERE id = #{id}
 	</update>
+
+	<delete id="delete" parameterType="long">
+		DELETE FROM article
+		WHERE id =
+		#{id}
+	</delete>
 </mapper>

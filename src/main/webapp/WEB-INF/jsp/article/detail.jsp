@@ -15,7 +15,7 @@
 	<div>수정일 : ${article.updateDate}</div>
 	<div class="option-box">
 		<span><a href="modify?id=${article.id}">수정</a></span> <span><a
-			href="delete?id=?id=${article.id}">삭제</a></span>
+			href="doDelete?id=${article.id}">삭제</a></span>
 	</div>
 </body>
 </html>

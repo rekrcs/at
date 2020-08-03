@@ -38,4 +38,8 @@ public class ArticleService {
 		articleDao.modify(param);
 
 	}
+
+	public void delete(long id) {
+		articleDao.delete(id);
+	}
 }
