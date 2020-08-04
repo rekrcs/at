@@ -18,8 +18,8 @@ public class ArticleService {
 		return 5;
 	}
 
-	public List<Article> getForPrintArticles() {
-		List<Article> articles = articleDao.getForPrintArticles();
+	public List<Article> getForPrintArticles(int page, int itemsInAPage, int limitFrom) {
+		List<Article> articles = articleDao.getForPrintArticles(page, itemsInAPage, limitFrom);
 
 		return articles;
 	}
@@ -57,5 +57,9 @@ public class ArticleService {
 
 	public Article getPreviousArticle(long id) {
 		return articleDao.getPreviousArticle(id);
+	}
+
+	public int getTotalCount() {
+		return articleDao.getTotalCount();
 	}
 }

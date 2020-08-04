@@ -27,6 +27,29 @@ a {
 .btns>a:hover {
 	color: red;
 }
+
+.page-box {
+	margin-top: 30px;
+}
+
+.page-box>ul>li>a {
+	padding: 0 10px;
+	text-decoration: underline;
+	color: #787878;
+}
+
+.page-box>ul>li:hover>a {
+	color: black;
+}
+
+.page-box>ul>li.current>a {
+	color: red;
+}
+
+.page-box>ul {
+	display: flex;
+	justify-content: center;
+}
 </style>
 
 
@@ -55,8 +78,18 @@ a {
 	</table>
 </div>
 
+<div class="con page-box">
+	<ul>
+		<c:forEach var="i" begin="1" end="${totalPage}" step="1">
+			<li class="${i == page ? 'current' : ''}"><a href="?page=${i}"
+				class="block">${i}</a></li>
+		</c:forEach>
+	</ul>
+</div>
+
 <div class="btns con">
 	<a href="./add">게시물 추가</a>
 </div>
+
 
 <%@ include file="../part/foot.jspf"%>
