@@ -20,20 +20,18 @@ public class ArticleController {
 
 	@RequestMapping("/article/list")
 	public String showList(Model model, String page) {
-		if(page == null) {
+		if (page == null) {
 			page = "1";
 		}
-		
+
 		int page1 = Integer.parseInt(page);
-		
+
 		int itemsInAPage = 5;
 		int totalCount = articleService.getTotalCount();
 		int totalPage = (int) Math.ceil(totalCount / (double) itemsInAPage);
 		int limitFrom = (page1 - 1) * itemsInAPage;
 
-
 		List<Article> articles = articleService.getForPrintArticles(page1, itemsInAPage, limitFrom);
-
 
 		model.addAttribute("page", page1);
 		model.addAttribute("articles", articles);
@@ -62,27 +60,19 @@ public class ArticleController {
 		return "article/detail";
 	}
 
-	@RequestMapping("/article/add")
-	public String showAdd() {
-		return "article/add";
+	@RequestMapping("/article/write")
+	public String showWrite() {
+		return "article/write";
 	}
 
-	@RequestMapping("/article/doAdd")
-	@ResponseBody
-	public String doAdd(@RequestParam Map<String, Object> param) {
-		articleService.add(param);
+	@RequestMapping("/article/doWrite")
+	public String doWrite(@RequestParam Map<String, Object> param) {
+		int newArticleId = articleService.write(param);
 
-		String msg = "게시물이 추가되었습니다.";
+		String redirectUrl = (String) param.get("redirectUrl");
+		redirectUrl = redirectUrl.replace("#id", newArticleId + "");
 
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("alert('" + msg + "');");
-		sb.append("location.replace('./list');");
-
-		sb.insert(0, "<script>");
-		sb.append("</script>");
-
-		return sb.toString();
+		return "redirect:" + redirectUrl;
 	}
 
 	@RequestMapping("/article/modify")

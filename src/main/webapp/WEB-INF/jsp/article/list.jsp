@@ -88,7 +88,7 @@ a {
 </div>
 
 <div class="btns con">
-	<a href="./add">게시물 추가</a>
+	<a href="./write">게시물 작성</a>
 </div>
 
 

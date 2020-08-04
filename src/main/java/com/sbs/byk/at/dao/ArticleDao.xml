@@ -19,7 +19,7 @@
 		AND id = #{id}
 	</select>
 
-	<insert id="add" parameterType="map" useGeneratedKeys="true"
+	<insert id="write" useGeneratedKeys="true"
 		keyProperty="id">
 		INSERT INTO article
 		SET regDate = NOW(),

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dao.ArticleDao;
 import com.sbs.byk.at.dto.Article;
 
@@ -29,9 +30,10 @@ public class ArticleService {
 		return article;
 	}
 
-	public long add(Map<String, Object> param) {
-		long newId = articleDao.add(param);
-		return newId;
+	public int write(Map<String, Object> param) {
+		articleDao.write(param);
+
+		return Util.getAsInt(param.get("id"));
 	}
 
 	public void modify(Map<String, Object> param) {

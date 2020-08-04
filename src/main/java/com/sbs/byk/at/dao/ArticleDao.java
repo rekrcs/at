@@ -15,7 +15,7 @@ public interface ArticleDao {
 
 	void write(String title, String body);
 
-	long add(Map<String, Object> param);
+	int write(Map<String, Object> param);
 
 	void modify(Map<String, Object> param);
 
