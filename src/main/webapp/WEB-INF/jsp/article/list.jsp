@@ -50,6 +50,12 @@ a {
 	display: flex;
 	justify-content: center;
 }
+
+.search-box {
+	margin-top: 10px;
+	display: flex;
+	justify-content: center;
+}
 </style>
 
 
@@ -85,6 +91,16 @@ a {
 				class="block">${i}</a></li>
 		</c:forEach>
 	</ul>
+</div>
+
+<div class="con search-box">
+	<form action="${pageContext.request.contextPath}/s/article/list">
+		<input type="hidden" name="page" value="1" /> <input type="hidden"
+			name="cateItemId" value="${param.cateItemId}" /> <input
+			type="hidden" name="searchKeywordType" value="title" /> <input
+			type="text" name="searchKeyword" value="${param.searchKeyword}" />
+		<button type="submit">검색</button>
+	</form>
 </div>
 
 <div class="btns con">
