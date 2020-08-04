@@ -9,7 +9,8 @@ import com.sbs.byk.at.dto.Article;
 
 @Mapper
 public interface ArticleDao {
-	List<Article> getForPrintArticles(int page, int itemsInAPage, int limitFrom);
+	List<Article> getForPrintArticles(int page, int itemsInAPage, int limitFrom, String searchKeyword,
+			String searchKeywordType);
 
 	Article getOne(int id);
 
@@ -29,5 +30,5 @@ public interface ArticleDao {
 
 	Article getPreviousArticle(int id);
 
-	int getTotalCount();
+	int getTotalCount(String searchKeyword, String searchKeywordType);
 }

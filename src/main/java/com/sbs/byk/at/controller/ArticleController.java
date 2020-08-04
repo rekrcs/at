@@ -19,21 +19,19 @@ public class ArticleController {
 	private ArticleService articleService;
 
 	@RequestMapping("/article/list")
-	public String showList(Model model, @RequestParam Map<String, Object> param) {
-		String page = (String)param.get("page");
-		
+	public String showList(Model model, String page, String searchKeyword, String searchKeywordType) {
 		if (page == null) {
 			page = "1";
 		}
 
 		int page1 = Integer.parseInt(page);
 
-		int itemsInAPage = 5;
-		int totalCount = articleService.getTotalCount();
+		int itemsInAPage = 10;
+		int totalCount = articleService.getTotalCount(searchKeyword, searchKeywordType);
 		int totalPage = (int) Math.ceil(totalCount / (double) itemsInAPage);
 		int limitFrom = (page1 - 1) * itemsInAPage;
 
-		List<Article> articles = articleService.getForPrintArticles(page1, itemsInAPage, limitFrom);
+		List<Article> articles = articleService.getForPrintArticles(page1, itemsInAPage, limitFrom, searchKeyword, searchKeywordType);
 
 		model.addAttribute("page", page1);
 		model.addAttribute("articles", articles);

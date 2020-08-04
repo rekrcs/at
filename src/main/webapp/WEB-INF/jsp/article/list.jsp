@@ -7,7 +7,6 @@
 
 <style>
 a {
-	text-decoration: none;
 	color: inherit;
 }
 /* 수정 삭제 버튼 시작 */
@@ -94,7 +93,7 @@ a {
 </div>
 
 <div class="con search-box">
-	<form action="${pageContext.request.contextPath}/s/article/list">
+	<form action="list">
 		<input type="hidden" name="page" value="1" /> <input type="hidden"
 			name="cateItemId" value="${param.cateItemId}" /> <input
 			type="hidden" name="searchKeywordType" value="title" /> <input
