@@ -41,7 +41,7 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/article/detail")
-	public String showDetail(Model model, long id) {
+	public String showDetail(Model model, int id) {
 		Article article = articleService.getOne(id);
 
 		int firstId = articleService.getFirstIdFromArticle();
@@ -76,7 +76,7 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/article/modify")
-	public String showModify(Model model, long id) {
+	public String showModify(Model model, int id) {
 		Article article = articleService.getOne(id);
 
 		model.addAttribute("article", article);
@@ -86,7 +86,7 @@ public class ArticleController {
 
 	@RequestMapping("/article/doModify")
 	@ResponseBody
-	public String doModify(@RequestParam Map<String, Object> param, long id) {
+	public String doModify(@RequestParam Map<String, Object> param, int id) {
 		articleService.modify(param);
 
 		String msg = id + "번 게시물이 수정되었습니다.";
@@ -104,7 +104,7 @@ public class ArticleController {
 
 	@RequestMapping("/article/doDelete")
 	@ResponseBody
-	public String doDelete(long id) {
+	public String doDelete(int id) {
 		articleService.delete(id);
 
 		String msg = id + "번 게시물이 삭제되었습니다.";

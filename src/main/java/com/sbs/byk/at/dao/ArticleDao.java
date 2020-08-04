@@ -11,7 +11,7 @@ import com.sbs.byk.at.dto.Article;
 public interface ArticleDao {
 	List<Article> getForPrintArticles(int page, int itemsInAPage, int limitFrom);
 
-	Article getOne(long id);
+	Article getOne(int id);
 
 	void write(String title, String body);
 
@@ -19,15 +19,15 @@ public interface ArticleDao {
 
 	void modify(Map<String, Object> param);
 
-	void delete(long id);
+	void delete(int id);
 
 	int getFirstIdFromArticle();
 
 	int getListIdFromArticle();
 
-	Article getNextArticle(long id);
+	Article getNextArticle(int id);
 
-	Article getPreviousArticle(long id);
+	Article getPreviousArticle(int id);
 
 	int getTotalCount();
 }

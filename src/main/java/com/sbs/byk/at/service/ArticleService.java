@@ -25,7 +25,7 @@ public class ArticleService {
 		return articles;
 	}
 
-	public Article getOne(long id) {
+	public Article getOne(int id) {
 		Article article = articleDao.getOne(id);
 		return article;
 	}
@@ -41,7 +41,7 @@ public class ArticleService {
 
 	}
 
-	public void delete(long id) {
+	public void delete(int id) {
 		articleDao.delete(id);
 	}
 
@@ -53,11 +53,11 @@ public class ArticleService {
 		return articleDao.getListIdFromArticle();
 	}
 
-	public Article getNextArticle(long id) {
+	public Article getNextArticle(int id) {
 		return articleDao.getNextArticle(id);
 	}
 
-	public Article getPreviousArticle(long id) {
+	public Article getPreviousArticle(int id) {
 		return articleDao.getPreviousArticle(id);
 	}
 

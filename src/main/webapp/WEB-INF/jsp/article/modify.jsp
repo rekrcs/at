@@ -6,10 +6,10 @@
 <%@ include file="../part/head.jspf"%>
 
 <script>
-	var submitModifyFormDone = false;
+	var ArticleModifyForm__submitDone = false;
 
-	function submitModifyForm(form) {
-		if (submitModifyFormDone) {
+	function ArticleModifyForm__submit(form) {
+		if (ArticleModifyForm__submitDone) {
 			alert('처리중입니다.');
 			return;
 		}
@@ -33,33 +33,41 @@
 		}
 
 		form.submit();
-		submitModifyFormDone = true;
+		ArticleModifyForm__submitDone = true;
 	}
 </script>
 
-<div class="modify-form-box con">
-	<form action="doModify" method="POST" class="modify-form form1"
-		onsubmit="submitModifyForm(this); return false;">
-		<input type="hidden" name="id" value="${article.id}" />
-		<div class="form-row">
-			<div class="label">제목</div>
-			<div class="input">
-				<input name="title" type="text" value="${article.title}" />
-			</div>
-		</div>
-		<div class="form-row">
-			<div class="label">내용</div>
-			<div class="input">
-				<textarea name="body">${article.body}</textarea>
-			</div>
-		</div>
-		<div class="form-row">
-			<div class="label">전송</div>
-			<div class="input">
-				<input type="submit" value="전송" /> <a
-					href="detail?id=${article.id}">취소</a>
-			</div>
-		</div>
-	</form>
-</div>
+<form method="POST" class="form1" action="doModify"
+	onsubmit="ArticleModifyForm__submit(this); return false;">
+	<input type="hidden" name="id" value="${article.id}" />
+	<div class="table-box con">
+		<table>
+			<tbody>
+				<tr>
+					<th>제목</th>
+					<td>
+						<div class="form-control-box">
+							<input type="text" placeholder="제목을 입력해주세요." name="title"
+								maxlength="100" value="${article.title}" />
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>내용</th>
+					<td>
+						<div class="form-control-box">
+							<textarea placeholder="내용을 입력해주세요." name="body" maxlength="2000">${article.body}</textarea>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>작성</th>
+					<td>
+						<button class="btn btn-primary" type="submit">작성</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</form>
 <%@ include file="../part/foot.jspf"%>

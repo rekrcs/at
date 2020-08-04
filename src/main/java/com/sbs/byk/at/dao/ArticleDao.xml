@@ -12,7 +12,7 @@
 		LIMIT #{limitFrom}, #{itemsInAPage}
 	</select>
 
-	<select id="getOne" parameterType="long" resultType="Article">
+	<select id="getOne" parameterType="int" resultType="Article">
 		SELECT *
 		FROM article
 		WHERE displayStatus = 1
@@ -38,7 +38,7 @@
 		WHERE id = #{id}
 	</update>
 
-	<update id="delete" parameterType="long">
+	<update id="delete" parameterType="int">
 		UPDATE article
 		SET delStatus =
 		1,
@@ -69,7 +69,7 @@
 		1
 	</select>
 
-	<select id="getNextArticle" parameterType="long"
+	<select id="getNextArticle" parameterType="int"
 		resultType="Article">
 		<![CDATA[
 		SELECT *
@@ -82,7 +82,7 @@
 		 ]]>
 	</select>
 
-	<select id="getPreviousArticle" parameterType="long"
+	<select id="getPreviousArticle" parameterType="int"
 		resultType="Article">
 		<![CDATA[
 		SELECT *
