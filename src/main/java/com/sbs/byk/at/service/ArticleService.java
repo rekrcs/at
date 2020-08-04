@@ -42,4 +42,20 @@ public class ArticleService {
 	public void delete(long id) {
 		articleDao.delete(id);
 	}
+
+	public int getFirstIdFromArticle() {
+		return articleDao.getFirstIdFromArticle();
+	}
+
+	public int getLastIdFromArticle() {
+		return articleDao.getListIdFromArticle();
+	}
+
+	public Article getNextArticle(long id) {
+		return articleDao.getNextArticle(id);
+	}
+
+	public Article getPreviousArticle(long id) {
+		return articleDao.getPreviousArticle(id);
+	}
 }

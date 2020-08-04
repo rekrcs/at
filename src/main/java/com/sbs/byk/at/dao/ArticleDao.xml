@@ -39,10 +39,58 @@
 
 	<update id="delete" parameterType="long">
 		UPDATE article
-		SET delStatus = 1,
+		SET delStatus =
+		1,
 		delDate = NOW(),
 		displayStatus = 1
 		WHERE id =
 		#{id}
 	</update>
+
+	<select id="getFirstIdFromArticle" resultType="int">
+		SELECT id
+		FROM
+		article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		ORDER BY id ASC
+		LIMIT 1
+	</select>
+
+	<select id="getListIdFromArticle" resultType="int">
+		SELECT id
+		FROM
+		article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		ORDER BY id DESC
+		LIMIT
+		1
+	</select>
+
+	<select id="getNextArticle" parameterType="long"
+		resultType="Article">
+		<![CDATA[
+		SELECT *
+		FROM article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		AND id > #{id}
+		ORDER BY id ASC
+		LIMIT 1
+		 ]]>
+	</select>
+
+	<select id="getPreviousArticle" parameterType="long"
+		resultType="Article">
+		<![CDATA[
+		SELECT *
+		FROM article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		AND id < #{id}
+		ORDER BY id DESC
+		LIMIT 1
+		 ]]>
+	</select>
 </mapper>

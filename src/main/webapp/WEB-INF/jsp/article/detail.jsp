@@ -31,6 +31,14 @@ a {
 .option-box>span>a:hover {
 	color: red;
 }
+
+.previous-next-box {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 50px;
+	font-size: 1.2rem;
+	font-weight: bold;
+}
 </style>
 
 <div class="table-box con">
@@ -61,5 +69,29 @@ a {
 	<span></span> <span class="option-delete"><a
 		onclick="if ( confirm('게시물을 삭제하시겠습니까?') == false ) return false;"
 		href="doDelete?id=${article.id}">삭제</a></span>
+</div>
+
+
+<div class="previous-next-box con">
+	<c:if test="${article.id == firstId}">
+		<span class="previous-btn"></span>
+		<span class="next-btn"><a href="detail?id=${articleNext.id}">다음글
+				(${articleNext.title}) <i class="fas fa-angle-right"></i>
+		</a></span>
+	</c:if>
+	<c:if test="${article.id == lastId}">
+		<span class="previous-btn"><a
+			href="detail?id=${articlePrevious.id}"><i
+				class="fas fa-angle-left"></i> (${articlePrevious.title}) 이전글</a></span>
+		<span class="next-btn"></span>
+	</c:if>
+	<c:if test="${article.id != lastId && article.id != firstId}">
+		<span class="previous-btn"><a
+			href="detail?id=${articlePrevious.id}"><i
+				class="fas fa-angle-left"></i> (${articlePrevious.title}) 이전글</a></span>
+		<span class="next-btn"><a href="detail?id=${articleNext.id}">다음글
+				(${articleNext.title}) <i class="fas fa-angle-right"></i>
+		</a> </span>
+	</c:if>
 </div>
 <%@ include file="../part/foot.jspf"%>

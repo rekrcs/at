@@ -33,7 +33,18 @@ public class ArticleController {
 	public String showDetail(Model model, long id) {
 		Article article = articleService.getOne(id);
 
-		model.addAttribute(article);
+		int firstId = articleService.getFirstIdFromArticle();
+		int lastId = articleService.getLastIdFromArticle();
+
+		Article articleNext = articleService.getNextArticle(id);
+
+		Article articlePrevious = articleService.getPreviousArticle(id);
+
+		model.addAttribute("article", article);
+		model.addAttribute("firstId", firstId);
+		model.addAttribute("lastId", lastId);
+		model.addAttribute("articleNext", articleNext);
+		model.addAttribute("articlePrevious", articlePrevious);
 
 		return "article/detail";
 	}

@@ -20,4 +20,12 @@ public interface ArticleDao {
 	void modify(Map<String, Object> param);
 
 	void delete(long id);
+
+	int getFirstIdFromArticle();
+
+	int getListIdFromArticle();
+
+	Article getNextArticle(long id);
+
+	Article getPreviousArticle(long id);
 }
