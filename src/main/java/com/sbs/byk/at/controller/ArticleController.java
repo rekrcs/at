@@ -19,7 +19,9 @@ public class ArticleController {
 	private ArticleService articleService;
 
 	@RequestMapping("/article/list")
-	public String showList(Model model, String page) {
+	public String showList(Model model, @RequestParam Map<String, Object> param) {
+		String page = (String)param.get("page");
+		
 		if (page == null) {
 			page = "1";
 		}

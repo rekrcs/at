@@ -37,6 +37,33 @@
 	}
 </script>
 
+<style>
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+.option-box {
+	display: flex;
+	justify-content: flex-start;
+}
+
+.option-box div {
+	color: black;
+	margin-top: 20px;
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.option-box>div>a {
+	color: blue;
+}
+
+.option-box>div>a:hover {
+	color: red;
+}
+</style>
+
 <form method="POST" class="form1" action="doWrite"
 	onsubmit="ArticleWriteForm__submit(this); return false;">
 	<input type="hidden" name="redirectUrl" value="/article/detail?id=#id">
@@ -70,4 +97,11 @@
 		</table>
 	</div>
 </form>
+
+<div class="option-box con">
+	<div>
+		<a href="javascript:history.back();"><i class="fas fa-angle-left"></i><i
+			class="fas fa-angle-left"></i>뒤로가기</a>
+	</div>
+</div>
 <%@ include file="../part/foot.jspf"%>
