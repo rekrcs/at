@@ -1,21 +1,65 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	${article.id}번 글 상세페이지 입니다.
-	<div>내용 : ${article.title}</div>
-	<div>제목 : ${article.body}</div>
-	<div>번호 : ${article.id}</div>
-	<div>작성일 : ${article.regDate}</div>
-	<div>수정일 : ${article.updateDate}</div>
-	<div class="option-box">
-		<span><a href="modify?id=${article.id}">수정</a></span> <span><a
-			href="doDelete?id=${article.id}">삭제</a></span>
-	</div>
-</body>
-</html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
+<c:set var="pageTitle" value="게시물 상세내용" />
+<%@ include file="../part/head.jspf"%>
+
+<style>
+a {
+	text-decoration: none;
+	color: inherit;
+}
+/* 수정 삭제 버튼 시작 */
+.option-box {
+	display: flex;
+	justify-content: flex-end;
+	color: black;
+	margin-top: 20px;
+	font-size: 1.2rem;
+	font-weight: bold;
+}
+
+.option-box>span:nth-child(2) {
+	margin: 0 3px;
+}
+
+.option-box>span>a {
+	color: blue;
+}
+
+.option-box>span>a:hover {
+	color: red;
+}
+</style>
+
+<div class="table-box con">
+	<table>
+		<tbody>
+			<tr>
+				<th>번호</th>
+				<td>${article.id}</td>
+			</tr>
+			<tr>
+				<th>날짜</th>
+				<td>${article.regDate}</td>
+			</tr>
+			<tr>
+				<th>제목</th>
+				<td>${article.title}</td>
+			</tr>
+			<tr>
+				<th>내용</th>
+				<td>${article.body}</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+<div class="option-box con">
+	<span class="option-modify"><a href="modify?id=${article.id}">수정</a></span>
+	<span></span> <span class="option-delete"><a
+		onclick="if ( confirm('게시물을 삭제하시겠습니까?') == false ) return false;"
+		href="doDelete?id=${article.id}">삭제</a></span>
+</div>
+<%@ include file="../part/foot.jspf"%>
