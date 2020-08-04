@@ -101,3 +101,20 @@ label[for] {
 .form1 .form-row {
 	margin-top: 10px;
 }
+
+/*홈으로 돌아가기*/
+.backHome {
+	text-align: center;
+	border-top: 1px solid rgba(0, 0, 0, .2);
+	border-bottom: 1px solid rgba(0, 0, 0, .2);
+	padding: 20px 0;
+	margin-top: 50px;
+	width: 50%;
+	margin-right: auto;
+	margin-left: auto;
+	font-weight: bold;
+}
+
+.backHome>a:hover {
+	color: #008d62;
+}

@@ -111,4 +111,8 @@ a {
 		</a> </span>
 	</c:if>
 </div>
+
+<div class="backHome">
+	<a href="list">리스트로 돌아가기</a>
+</div>
 <%@ include file="../part/foot.jspf"%>
