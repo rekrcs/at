@@ -13,7 +13,10 @@ a {
 /* 수정 삭제 버튼 시작 */
 .option-box {
 	display: flex;
-	justify-content: flex-end;
+	justify-content: space-between;
+}
+
+.option-box div {
 	color: black;
 	margin-top: 20px;
 	font-size: 1.2rem;
@@ -24,11 +27,19 @@ a {
 	margin: 0 3px;
 }
 
-.option-box>span>a {
+.option-box>div>span>a {
 	color: blue;
 }
 
-.option-box>span>a:hover {
+.option-box>div>span>a:hover {
+	color: red;
+}
+
+.option-box>div>a {
+	color: blue;
+}
+
+.option-box>div>a:hover {
 	color: red;
 }
 
@@ -65,10 +76,16 @@ a {
 
 </div>
 <div class="option-box con">
-	<span class="option-modify"><a href="modify?id=${article.id}">수정</a></span>
-	<span></span> <span class="option-delete"><a
-		onclick="if ( confirm('게시물을 삭제하시겠습니까?') == false ) return false;"
-		href="doDelete?id=${article.id}">삭제</a></span>
+	<div>
+		<a href="javascript:history.back();"><i class="fas fa-angle-left"></i><i
+			class="fas fa-angle-left"></i>뒤로가기</a>
+	</div>
+	<div>
+		<span class="option-modify"><a href="modify?id=${article.id}">수정</a></span>
+		<span></span> <span class="option-delete"><a
+			onclick="if ( confirm('게시물을 삭제하시겠습니까?') == false ) return false;"
+			href="doDelete?id=${article.id}">삭제</a></span>
+	</div>
 </div>
 
 
