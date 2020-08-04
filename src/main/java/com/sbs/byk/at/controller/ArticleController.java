@@ -35,6 +35,7 @@ public class ArticleController {
 		List<Article> articles = articleService.getForPrintArticles(page1, itemsInAPage, limitFrom);
 
 
+		model.addAttribute("page", page1);
 		model.addAttribute("articles", articles);
 		model.addAttribute("totalPage", totalPage);
 

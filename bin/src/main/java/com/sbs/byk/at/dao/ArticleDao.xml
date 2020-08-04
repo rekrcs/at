@@ -3,11 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sbs.byk.at.dao.ArticleDao">
-	<select id="getForPrintArticles" resultType="Article">
+	<select id="getForPrintArticles" parameterType="int" resultType="Article">
 		SELECT *
 		FROM article
 		WHERE displayStatus = 1
+		AND delStatus != 1
 		ORDER BY id DESC
+		LIMIT #{limitFrom}, #{itemsInAPage}
 	</select>
 
 	<select id="getOne" parameterType="long" resultType="Article">
@@ -16,14 +18,89 @@
 		WHERE displayStatus = 1
 		AND id = #{id}
 	</select>
-	
-	<select id="write" parameterType="String">
+
+	<insert id="add" parameterType="map" useGeneratedKeys="true"
+		keyProperty="id">
 		INSERT INTO article
 		SET regDate = NOW(),
 		updateDate = NOW(),
+		displayStatus = 1,
 		title = #{title},
+		body = #{body}
+	</insert>
+
+	<update id="modify" parameterType="map">
+		UPDATE article
+		SET title =
+		#{title},
 		body = #{body},
+		updateDate = NOW()
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete" parameterType="long">
+		UPDATE article
+		SET delStatus =
+		1,
+		delDate = NOW(),
 		displayStatus = 1
-		
+		WHERE id =
+		#{id}
+	</update>
+
+	<select id="getFirstIdFromArticle" resultType="int">
+		SELECT id
+		FROM
+		article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		ORDER BY id ASC
+		LIMIT 1
+	</select>
+
+	<select id="getListIdFromArticle" resultType="int">
+		SELECT id
+		FROM
+		article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		ORDER BY id DESC
+		LIMIT
+		1
+	</select>
+
+	<select id="getNextArticle" parameterType="long"
+		resultType="Article">
+		<![CDATA[
+		SELECT *
+		FROM article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		AND id > #{id}
+		ORDER BY id ASC
+		LIMIT 1
+		 ]]>
+	</select>
+
+	<select id="getPreviousArticle" parameterType="long"
+		resultType="Article">
+		<![CDATA[
+		SELECT *
+		FROM article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		AND id < #{id}
+		ORDER BY id DESC
+		LIMIT 1
+		 ]]>
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		<![CDATA[
+		SELECT COUNT(*)
+		FROM article
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		 ]]>
 	</select>
 </mapper>
