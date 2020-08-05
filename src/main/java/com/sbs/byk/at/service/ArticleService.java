@@ -73,8 +73,8 @@ public class ArticleService {
 		return articleDao.writeReply(param);
 	}
 
-	public List<ArticleReply> getForPrintArticleRelies(int articleId) {
-		return articleDao.getForPrintArticleRelies(articleId);
+	public List<ArticleReply> getForPrintArticleReplies(int articleId) {
+		return articleDao.getForPrintArticleReplies(articleId);
 	}
 
 	public void deleteReply(int id) {

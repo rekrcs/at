@@ -125,17 +125,13 @@
 		body = #{body}
 	</insert>
 
-	<select id="getForPrintArticleRelies" parameterType="int"
+	<select id="getForPrintArticleReplies" parameterType="int"
 		resultType="ArticleReply">
-		SELECT *
-		FROM
+		SELECT * FROM
 		articleReply
 		WHERE displayStatus = 1
-		AND
-		delStatus != 1
-		AND articleId =
-		#{articleId}
-		ORDER BY id DESC
+		AND delStatus != 1
+		AND articleId = #{articleId}
 	</select>
 
 	<update id="deleteReply" parameterType="int">

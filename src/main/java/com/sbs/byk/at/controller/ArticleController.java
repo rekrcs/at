@@ -1,10 +1,8 @@
 package com.sbs.byk.at.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +19,19 @@ import com.sbs.byk.at.service.ArticleService;
 public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
+
+	@RequestMapping("article/getForPrintArticleRepliesRs")
+	@ResponseBody
+	public Map<String, Object> getForPrintArticleRepliesRs(int articleId) {
+		List<ArticleReply> articleReplies = articleService.getForPrintArticleReplies(articleId);
+
+		Map<String, Object> rs = new HashMap<>();
+		rs.put("resultCode", "S-1");
+		rs.put("msg", String.format("총 %d개의 댓글이 있습니다.", articleReplies.size()));
+		rs.put("articleReplies", articleReplies);
+
+		return rs;
+	}
 
 	@RequestMapping("/article/list")
 	public String showList(Model model, String page, String searchKeyword, String searchKeywordType) {
@@ -55,7 +66,7 @@ public class ArticleController {
 		Article articleNext = articleService.getNextArticle(id);
 
 		Article articlePrevious = articleService.getPreviousArticle(id);
-		List<ArticleReply> articleReplies = articleService.getForPrintArticleRelies(id);
+		List<ArticleReply> articleReplies = articleService.getForPrintArticleReplies(id);
 
 		model.addAttribute("article", article);
 		model.addAttribute("firstId", firstId);
