@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dto.Article;
 import com.sbs.byk.at.service.ArticleService;
 
@@ -31,7 +32,8 @@ public class ArticleController {
 		int totalPage = (int) Math.ceil(totalCount / (double) itemsInAPage);
 		int limitFrom = (page1 - 1) * itemsInAPage;
 
-		List<Article> articles = articleService.getForPrintArticles(page1, itemsInAPage, limitFrom, searchKeyword, searchKeywordType);
+		List<Article> articles = articleService.getForPrintArticles(page1, itemsInAPage, limitFrom, searchKeyword,
+				searchKeywordType);
 
 		model.addAttribute("page", page1);
 		model.addAttribute("articles", articles);
@@ -117,6 +119,29 @@ public class ArticleController {
 		sb.insert(0, "<script>");
 		sb.append("</script>");
 
+		return sb.toString();
+	}
+
+	@RequestMapping("/article/doWriteReply")
+	@ResponseBody
+	public String doWriteReply(@RequestParam Map<String, Object> param) {
+		int articleId = Util.getAsInt(param.get("id"));
+		articleService.writeReply(param);
+
+//		String redirectUrl = (String) param.get("redirectUrl");
+//		redirectUrl = redirectUrl.replace("#id", articleId + "");
+		
+		
+		
+		String msg = articleId + "번 게시물에 댓글을 작성했습니다.";
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("alert('" + msg + "');");
+		sb.append("location.replace('./detail?id=" + articleId + "');");
+
+		sb.insert(0, "<script>");
+		sb.append("</script>");
 		return sb.toString();
 	}
 }

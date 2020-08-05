@@ -114,4 +114,13 @@
 			AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 		</if>
 	</select>
+	
+	<insert id="writeReply" useGeneratedKeys="true" keyProperty="id">
+		INSERT
+		INTO articleReply
+		SET regDate = NOW(),
+		updateDate = NOW(),
+		displayStatus = 1,
+		body = #{body}
+	</insert>
 </mapper>

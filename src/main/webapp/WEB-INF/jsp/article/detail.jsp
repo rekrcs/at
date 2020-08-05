@@ -111,7 +111,33 @@ a {
 		</a> </span>
 	</c:if>
 </div>
-
+<h2 class="con">댓글 작성</h2>
+<form action="doWriteReply" method="POST" class="form1"
+	onsubmit="ArticleWriteForm__submit(this); return false;">
+	<input type="hidden" name="redirectUrl" value="/article/detail?id=#id">
+	<input type="hidden" name="id" value="${article.id}">
+	<div class="table-box con">
+		<table>
+			<tbody>
+				<tr>
+					<th>내용</th>
+					<td>
+						<div class="form-control-box ">
+							<textarea class="min-height-100px" placeholder="내용을 입력해주세요."
+								name="body" maxlength="2000"></textarea>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>작성</th>
+					<td>
+						<button class="btn btn-primary" type="submit">작성</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</form>
 <div class="backHome">
 	<a href="list">리스트로 돌아가기</a>
 </div>

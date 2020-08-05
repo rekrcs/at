@@ -58,6 +58,9 @@ label[for] {
 	resize: none;
 }
 
+.min-height-100px {
+	min-height:100px !important;
+}
 /* 커스텀 */
 .con {
 	max-width: 1200px;

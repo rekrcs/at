@@ -19,8 +19,10 @@ public class ArticleService {
 		return 5;
 	}
 
-	public List<Article> getForPrintArticles(int page, int itemsInAPage, int limitFrom, String searchKeyword, String searchKeywordType) {
-		List<Article> articles = articleDao.getForPrintArticles(page, itemsInAPage, limitFrom, searchKeyword, searchKeywordType);
+	public List<Article> getForPrintArticles(int page, int itemsInAPage, int limitFrom, String searchKeyword,
+			String searchKeywordType) {
+		List<Article> articles = articleDao.getForPrintArticles(page, itemsInAPage, limitFrom, searchKeyword,
+				searchKeywordType);
 
 		return articles;
 	}
@@ -61,7 +63,11 @@ public class ArticleService {
 		return articleDao.getPreviousArticle(id);
 	}
 
-	public int getTotalCount(String searchKeyword, String searchKeywordTypeString ) {
+	public int getTotalCount(String searchKeyword, String searchKeywordTypeString) {
 		return articleDao.getTotalCount(searchKeyword, searchKeywordTypeString);
+	}
+
+	public int writeReply(Map<String, Object> param) {
+		return articleDao.writeReply(param);
 	}
 }

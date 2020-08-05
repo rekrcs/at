@@ -31,4 +31,6 @@ public interface ArticleDao {
 	Article getPreviousArticle(int id);
 
 	int getTotalCount(String searchKeyword, String searchKeywordType);
+
+	int writeReply(Map<String, Object> param);
 }
