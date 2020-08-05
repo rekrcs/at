@@ -125,14 +125,12 @@ public class ArticleController {
 	@RequestMapping("/article/doWriteReply")
 	@ResponseBody
 	public String doWriteReply(@RequestParam Map<String, Object> param) {
-		int articleId = Util.getAsInt(param.get("id"));
+		int articleId = Util.getAsInt(param.get("articleId"));
 		articleService.writeReply(param);
 
 //		String redirectUrl = (String) param.get("redirectUrl");
 //		redirectUrl = redirectUrl.replace("#id", articleId + "");
-		
-		
-		
+			
 		String msg = articleId + "번 게시물에 댓글을 작성했습니다.";
 
 		StringBuilder sb = new StringBuilder();

@@ -115,7 +115,7 @@ a {
 <form action="doWriteReply" method="POST" class="form1"
 	onsubmit="ArticleWriteForm__submit(this); return false;">
 	<input type="hidden" name="redirectUrl" value="/article/detail?id=#id">
-	<input type="hidden" name="id" value="${article.id}">
+	<input type="hidden" name="articleId" value="${article.id}">
 	<div class="table-box con">
 		<table>
 			<tbody>

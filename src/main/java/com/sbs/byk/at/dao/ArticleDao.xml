@@ -121,6 +121,7 @@
 		SET regDate = NOW(),
 		updateDate = NOW(),
 		displayStatus = 1,
+		articleId = #{articleId},
 		body = #{body}
 	</insert>
 </mapper>
