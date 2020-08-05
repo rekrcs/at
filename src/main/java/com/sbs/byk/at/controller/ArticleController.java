@@ -163,4 +163,34 @@ public class ArticleController {
 
 		return sb.toString();
 	}
+
+	@RequestMapping("/article/modifyReply")
+	public String showModifyReply(Model model, int id) {
+		ArticleReply articleReply = articleService.getArticleReplyById(id);
+
+		model.addAttribute("articleReply", articleReply);
+
+		return "article/modifyReply";
+	}
+
+	@RequestMapping("/article/doModifyReply")
+	@ResponseBody
+	public String doModifyReply(@RequestParam Map<String, Object> param) {
+		int id = Util.getAsInt(param.get("id"));
+		int articleId = Util.getAsInt(param.get("articleId"));
+
+		articleService.modifyReply(param);
+
+		String msg = id + "번 댓글이 수정되었습니다.";
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("alert('" + msg + "');");
+		sb.append("location.replace('./detail?id=" + articleId + "');");
+
+		sb.insert(0, "<script>");
+		sb.append("</script>");
+
+		return sb.toString();
+	}
 }

@@ -133,7 +133,7 @@ a {
 					<td>
 						<div class="form-control-box ">
 							<textarea class="min-height-100px" placeholder="내용을 입력해주세요."
-								name="body" maxlength="2000"></textarea>
+								name="body" maxlength="300"></textarea>
 						</div>
 					</td>
 				</tr>
@@ -173,6 +173,8 @@ a {
 					<td>${articleReply.regDate}</td>
 					<td>${articleReply.body}</td>
 					<td><a
+						href="./modifyReply?id=${articleReply.id}">수정</a>
+						<a
 						href="./doDeleteReply?id=${articleReply.id}&articleId=${article.id}"
 						onclick="if ( confirm('삭제하시겠습니까?') == false ) { return false; }">삭제</a>
 					</td>

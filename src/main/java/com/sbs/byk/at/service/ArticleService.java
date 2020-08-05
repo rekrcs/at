@@ -79,4 +79,13 @@ public class ArticleService {
 	public void deleteReply(int id) {
 		articleDao.deleteReply(id);
 	}
+
+	public ArticleReply getArticleReplyById(int id) {
+		return articleDao.getArticleReplyById(id);
+	}
+
+	public void modifyReply(Map<String, Object> param) {
+		articleDao.modifyReply(param);
+		
+	}
 }

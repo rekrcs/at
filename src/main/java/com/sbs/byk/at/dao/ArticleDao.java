@@ -38,4 +38,9 @@ public interface ArticleDao {
 	List<ArticleReply> getForPrintArticleRelies(int articleId);
 
 	void deleteReply(int id);
+
+	ArticleReply getArticleReplyById(int id);
+
+	void modifyReply(Map<String, Object> param);
+
 }

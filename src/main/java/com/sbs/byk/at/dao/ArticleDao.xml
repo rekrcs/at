@@ -148,4 +148,22 @@
 		WHERE id =
 		#{id}
 	</update>
+
+	<select id="getArticleReplyById" parameterType="int"
+		resultType="ArticleReply">
+		SELECT *
+		FROM
+		articleReply
+		WHERE displayStatus = 1
+		AND
+		delStatus != 1
+		AND id = #{id}
+	</select>
+
+	<update id="modifyReply" parameterType="map">
+		UPDATE articleReply
+		SET body = #{body},
+		updateDate = NOW()
+		WHERE id = #{id}
+	</update>
 </mapper>
