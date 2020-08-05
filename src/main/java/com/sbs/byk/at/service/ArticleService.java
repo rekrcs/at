@@ -75,4 +75,8 @@ public class ArticleService {
 	public List<ArticleReply> getForPrintArticleRelies(int articleId) {
 		return articleDao.getForPrintArticleRelies(articleId);
 	}
+
+	public void deleteReply(int id) {
+		articleDao.deleteReply(id);
+	}
 }

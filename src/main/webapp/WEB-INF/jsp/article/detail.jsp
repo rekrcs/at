@@ -10,14 +10,14 @@ a {
 	text-decoration: none;
 	color: inherit;
 }
-/* 수정 삭제 버튼 시작 */
+
+/* 게시물 수정 삭제 버튼 시작 */
 .option-box {
 	display: flex;
 	justify-content: space-between;
 }
 
 .option-box div {
-	color: black;
 	margin-top: 20px;
 	font-size: 1.2rem;
 	font-weight: bold;
@@ -49,6 +49,15 @@ a {
 	margin-top: 50px;
 	font-size: 1.2rem;
 	font-weight: bold;
+}
+
+/* 댓글 수정 삭제 버튼 시작 */
+.table-box>table>tbody>tr>td>a {
+	color: blue;
+}
+
+.table-box>table>tbody>tr>td>a:hover {
+	color: red;
 }
 </style>
 
@@ -146,7 +155,6 @@ a {
 		<colgroup>
 			<col width="80">
 			<col width="180">
-			<col width="180">
 			<col>
 			<col width="200">
 		</colgroup>
@@ -164,7 +172,10 @@ a {
 					<td>${articleReply.id}</td>
 					<td>${articleReply.regDate}</td>
 					<td>${articleReply.body}</td>
-					<td></td>
+					<td><a
+						href="./doDeleteReply?id=${articleReply.id}&articleId=${article.id}"
+						onclick="if ( confirm('삭제하시겠습니까?') == false ) { return false; }">삭제</a>
+					</td>
 				</tr>
 			</c:forEach>
 		</tbody>

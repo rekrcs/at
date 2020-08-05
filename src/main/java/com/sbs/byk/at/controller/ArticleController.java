@@ -145,4 +145,22 @@ public class ArticleController {
 		sb.append("</script>");
 		return sb.toString();
 	}
+
+	@RequestMapping("/article/doDeleteReply")
+	@ResponseBody
+	public String doDeleteReply(int id, int articleId) {
+		articleService.deleteReply(id);
+
+		String msg = "댓글이 삭제되었습니다.";
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("alert('" + msg + "');");
+		sb.append("location.replace('./detail?id=" + articleId + "');");
+
+		sb.insert(0, "<script>");
+		sb.append("</script>");
+
+		return sb.toString();
+	}
 }

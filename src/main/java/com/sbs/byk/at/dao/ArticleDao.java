@@ -36,4 +36,6 @@ public interface ArticleDao {
 	int writeReply(Map<String, Object> param);
 
 	List<ArticleReply> getForPrintArticleRelies(int articleId);
+
+	void deleteReply(int id);
 }

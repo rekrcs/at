@@ -50,7 +50,7 @@
 		SET delStatus =
 		1,
 		delDate = NOW(),
-		displayStatus = 1
+		displayStatus = 0
 		WHERE id =
 		#{id}
 	</update>
@@ -125,14 +125,27 @@
 		body = #{body}
 	</insert>
 
-	<select id="getForPrintArticleRelies" parameterType="int" resultType="ArticleReply">
+	<select id="getForPrintArticleRelies" parameterType="int"
+		resultType="ArticleReply">
 		SELECT *
 		FROM
 		articleReply
 		WHERE displayStatus = 1
-		AND delStatus != 1
+		AND
+		delStatus != 1
 		AND articleId =
 		#{articleId}
 		ORDER BY id DESC
 	</select>
+
+	<update id="deleteReply" parameterType="int">
+		UPDATE articleReply
+		SET
+		delStatus =
+		1,
+		delDate = NOW(),
+		displayStatus = 0
+		WHERE id =
+		#{id}
+	</update>
 </mapper>
