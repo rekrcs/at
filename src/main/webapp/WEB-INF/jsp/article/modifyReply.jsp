@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<c:set var="pageName" value="게시물 댓글 수정" />
+<c:set var="pageTitle" value="게시물 댓글 수정" />
 <%@ include file="../part/head.jspf"%>
 
 <form method="POST" action="./doModifyReply">

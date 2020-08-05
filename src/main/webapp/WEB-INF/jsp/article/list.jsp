@@ -102,8 +102,8 @@ a {
 	</form>
 </div>
 
-<div class="btns con">
-	<a href="./write">게시물 작성</a>
+<div class="btns con" >
+	<a style="text-decoration: none" href="./write">게시물 작성</a>
 </div>
 
 
