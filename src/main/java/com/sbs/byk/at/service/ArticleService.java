@@ -100,4 +100,8 @@ public class ArticleService {
 
 		return rs;
 	}
+
+	public List<ArticleReply> getForPrintArticleReplies(int articleId, int from) {
+		return articleDao.getForPrintArticleRepliesFrom(articleId, from);
+	}
 }

@@ -127,36 +127,29 @@ a {
 <h2 class="con">댓글 작성</h2>
 
 <script>
-	function WriteReply__submitForm(form) {
-		form.body.value = form.body.value.trim();
+		function ArticleReply__submitWriteForm(form) {
+			form.body.value = form.body.value.trim();
 
-		if (form.body.value.length == 0) {
-			alert('댓글을 입력해주세요.');
-			form.body.focus();
+			if (form.body.value.length == 0) {
+				alert('댓글을 입력해주세요.');
+				form.body.focus();
 
-			return;
+				return;
+			}
+
+			$.post('./doWriteReplyAjax', {
+				articleId : articleId,
+				body : form.body.value
+			}, function(data) {
+				
+			}, 'json');
+
+			form.body.value = '';
 		}
-
-		$.post('./doWriteReplyAjax', {
-
-			articleId : articleId,
-			body : form.body.value
-		}, function(data) {
-			if (data.msg) {
-				alert(data.msg);
-			}
-
-			if (data.resultCode.substr(0, 2) == 'S-') {
-				location.reload(); // 임시
-			}
-		}, 'json');
-
-		form.body.value = '';
-	}
-</script>
+	</script>
 
 <form action="" class="form1"
-	onsubmit="WriteReply__submitForm(this); return false;">
+	onsubmit="ArticleReply__submitWriteForm(this); return false;">
 	<div class="table-box con">
 		<table>
 			<tbody>
@@ -183,13 +176,19 @@ a {
 <h2 class="con">댓글 리스트</h2>
 
 <script>
+	var ArticleReply__lastLoadedArticleReplyId = 0;
 	function ArticleReply__loadList() {
 		$.get('./getForPrintArticleRepliesRs', {
-			articleId : articleId
+			articleId : articleId,
+			from : ArticleReply__lastLoadedArticleReplyId + 1
 		}, function(data) {
+			data.articleReplies = data.articleReplies.reverse();
+			
 			for (var i = 0; i < data.articleReplies.length; i++) {
 				var articleReply = data.articleReplies[i];
 				ArticleReply__drawReply(articleReply);
+
+				ArticleReply__lastLoadedArticleReplyId = articleReply.id;
 			}
 		}, 'json');
 	}
@@ -215,8 +214,7 @@ a {
 	$(function() {
 		ArticleReply__$listTbody = $('.article-reply-list-box > table tbody');
 
-		ArticleReply__loadList();
-		//setInterval(ArticleReply__loadList, 1000);
+//		setInterval(ArticleReply__loadList, 1000);
 	});
 </script>
 

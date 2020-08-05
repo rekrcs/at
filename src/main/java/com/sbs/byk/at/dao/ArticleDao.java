@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.sbs.byk.at.dto.Article;
 import com.sbs.byk.at.dto.ArticleReply;
@@ -42,5 +43,7 @@ public interface ArticleDao {
 	ArticleReply getArticleReplyById(int id);
 
 	void modifyReply(Map<String, Object> param);
+
+	List<ArticleReply> getForPrintArticleRepliesFrom(@Param("articleId") int articleId, @Param("from") int from);
 
 }

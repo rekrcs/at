@@ -130,8 +130,23 @@
 		SELECT * FROM
 		articleReply
 		WHERE displayStatus = 1
-		AND delStatus != 1
+		AND
+		delStatus != 1
 		AND articleId = #{articleId}
+		ORDER BY id DESC
+	</select>
+
+	<select id="getForPrintArticleRepliesFrom"
+		resultType="ArticleReply">
+		SELECT * FROM
+		articleReply
+		WHERE displayStatus = 1
+		AND
+		delStatus != 1
+		AND articleId = #{articleId}
+		AND id >= #{from}
+		ORDER BY id
+		DESC
 	</select>
 
 	<update id="deleteReply" parameterType="int">
@@ -158,7 +173,8 @@
 
 	<update id="modifyReply" parameterType="map">
 		UPDATE articleReply
-		SET body = #{body},
+		SET
+		body = #{body},
 		updateDate = NOW()
 		WHERE id = #{id}
 	</update>
