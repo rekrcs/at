@@ -138,6 +138,38 @@ a {
 		</table>
 	</div>
 </form>
+
+<h2 class="con">댓글 리스트</h2>
+
+<div class="table-box con">
+	<table>
+		<colgroup>
+			<col width="80">
+			<col width="180">
+			<col width="180">
+			<col>
+			<col width="200">
+		</colgroup>
+		<thead>
+			<tr>
+				<th>번호</th>
+				<th>날짜</th>
+				<th>내용</th>
+				<th>비고</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach items="${articleReplies}" var="articleReply">
+				<tr>
+					<td>${articleReply.id}</td>
+					<td>${articleReply.regDate}</td>
+					<td>${articleReply.body}</td>
+					<td></td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>
 <div class="backHome">
 	<a href="list">리스트로 돌아가기</a>
 </div>

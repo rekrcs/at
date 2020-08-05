@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dao.ArticleDao;
 import com.sbs.byk.at.dto.Article;
+import com.sbs.byk.at.dto.ArticleReply;
 
 @Service
 public class ArticleService {
@@ -69,5 +70,9 @@ public class ArticleService {
 
 	public int writeReply(Map<String, Object> param) {
 		return articleDao.writeReply(param);
+	}
+
+	public List<ArticleReply> getForPrintArticleRelies(int articleId) {
+		return articleDao.getForPrintArticleRelies(articleId);
 	}
 }

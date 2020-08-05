@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dto.Article;
+import com.sbs.byk.at.dto.ArticleReply;
 import com.sbs.byk.at.service.ArticleService;
 
 @Controller
@@ -52,12 +53,14 @@ public class ArticleController {
 		Article articleNext = articleService.getNextArticle(id);
 
 		Article articlePrevious = articleService.getPreviousArticle(id);
+		List<ArticleReply> articleReplies = articleService.getForPrintArticleRelies(id);
 
 		model.addAttribute("article", article);
 		model.addAttribute("firstId", firstId);
 		model.addAttribute("lastId", lastId);
 		model.addAttribute("articleNext", articleNext);
 		model.addAttribute("articlePrevious", articlePrevious);
+		model.addAttribute("articleReplies", articleReplies);
 
 		return "article/detail";
 	}
@@ -130,7 +133,7 @@ public class ArticleController {
 
 //		String redirectUrl = (String) param.get("redirectUrl");
 //		redirectUrl = redirectUrl.replace("#id", articleId + "");
-			
+
 		String msg = articleId + "번 게시물에 댓글을 작성했습니다.";
 
 		StringBuilder sb = new StringBuilder();

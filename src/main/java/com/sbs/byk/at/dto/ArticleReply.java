@@ -13,6 +13,8 @@ public class ArticleReply {
 	private String updateDate;
 	private boolean delStatus;
 	private String delDate;
+	private int articleId;
+	private int memberId;
 	private boolean displayStatus;
 	private String body;
 }

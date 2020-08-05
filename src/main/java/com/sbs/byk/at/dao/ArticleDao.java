@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.sbs.byk.at.dto.Article;
+import com.sbs.byk.at.dto.ArticleReply;
 
 @Mapper
 public interface ArticleDao {
@@ -33,4 +34,6 @@ public interface ArticleDao {
 	int getTotalCount(String searchKeyword, String searchKeywordType);
 
 	int writeReply(Map<String, Object> param);
+
+	List<ArticleReply> getForPrintArticleRelies(int articleId);
 }

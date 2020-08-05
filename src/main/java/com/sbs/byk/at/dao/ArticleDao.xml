@@ -114,7 +114,7 @@
 			AND title LIKE CONCAT('%', #{searchKeyword}, '%')
 		</if>
 	</select>
-	
+
 	<insert id="writeReply" useGeneratedKeys="true" keyProperty="id">
 		INSERT
 		INTO articleReply
@@ -124,4 +124,15 @@
 		articleId = #{articleId},
 		body = #{body}
 	</insert>
+
+	<select id="getForPrintArticleRelies" parameterType="int" resultType="ArticleReply">
+		SELECT *
+		FROM
+		articleReply
+		WHERE displayStatus = 1
+		AND delStatus != 1
+		AND articleId =
+		#{articleId}
+		ORDER BY id DESC
+	</select>
 </mapper>
