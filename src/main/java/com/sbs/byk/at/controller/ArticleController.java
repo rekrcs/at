@@ -3,6 +3,8 @@ package com.sbs.byk.at.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,13 +73,21 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/article/doWrite")
+	@ResponseBody
 	public String doWrite(@RequestParam Map<String, Object> param) {
 		int newArticleId = articleService.write(param);
 
-		String redirectUrl = (String) param.get("redirectUrl");
-		redirectUrl = redirectUrl.replace("#id", newArticleId + "");
+		String msg = newArticleId + "번 게시물이 생성되었습니다.";
 
-		return "redirect:" + redirectUrl;
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("alert('" + msg + "');");
+		sb.append("location.replace('./detail?id=" + newArticleId + "');");
+
+		sb.insert(0, "<script>");
+		sb.append("</script>");
+
+		return sb.toString();
 	}
 
 	@RequestMapping("/article/modify")
@@ -130,9 +140,6 @@ public class ArticleController {
 	public String doWriteReply(@RequestParam Map<String, Object> param) {
 		int articleId = Util.getAsInt(param.get("articleId"));
 		articleService.writeReply(param);
-
-//		String redirectUrl = (String) param.get("redirectUrl");
-//		redirectUrl = redirectUrl.replace("#id", articleId + "");
 
 		String msg = articleId + "번 게시물에 댓글을 작성했습니다.";
 
@@ -192,5 +199,14 @@ public class ArticleController {
 		sb.append("</script>");
 
 		return sb.toString();
+	}
+
+	@RequestMapping("article/doWriteReplyAjax")
+	@ResponseBody
+	public Map<String, Object> doWriteReplyAjax(@RequestParam Map<String, Object> param) {
+
+		Map<String, Object> rs = articleService.writeReply1(param);
+
+		return rs;
 	}
 }

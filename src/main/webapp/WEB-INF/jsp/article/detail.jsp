@@ -5,6 +5,34 @@
 <c:set var="pageTitle" value="게시물 상세내용" />
 <%@ include file="../part/head.jspf"%>
 
+<script>
+		function WriteReply__submitForm(form) {
+			form.body.value = form.body.value.trim();
+
+			if (form.body.value.length == 0) {
+				alert('댓글을 입력해주세요.');
+				form.body.focus();
+
+				return;
+			}
+
+			$.post('./doWriteReplyAjax', {
+				articleId : ${article.id},
+				body : form.body.value
+			}, function(data) {
+				if (data.msg) {
+					alert(data.msg);
+				}
+
+				if ( data.resultCode.substr(0, 2) == 'S-' ) {
+					location.reload(); // 임시
+				}
+			}, 'json');
+
+			form.body.value = '';
+		}
+	</script>
+
 <style>
 a {
 	text-decoration: none;
@@ -121,10 +149,8 @@ a {
 	</c:if>
 </div>
 <h2 class="con">댓글 작성</h2>
-<form action="doWriteReply" method="POST" class="form1"
-	onsubmit="ArticleWriteForm__submit(this); return false;">
-	<input type="hidden" name="redirectUrl" value="/article/detail?id=#id">
-	<input type="hidden" name="articleId" value="${article.id}">
+<form action="" class="form1"
+	onsubmit="WriteReply__submitForm(this); return false;">
 	<div class="table-box con">
 		<table>
 			<tbody>
@@ -172,9 +198,7 @@ a {
 					<td>${articleReply.id}</td>
 					<td>${articleReply.regDate}</td>
 					<td>${articleReply.body}</td>
-					<td><a
-						href="./modifyReply?id=${articleReply.id}">수정</a>
-						<a
+					<td><a href="./modifyReply?id=${articleReply.id}">수정</a> <a
 						href="./doDeleteReply?id=${articleReply.id}&articleId=${article.id}"
 						onclick="if ( confirm('삭제하시겠습니까?') == false ) { return false; }">삭제</a>
 					</td>
