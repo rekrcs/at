@@ -104,4 +104,14 @@ public class ArticleService {
 	public List<ArticleReply> getForPrintArticleReplies(int articleId, int from) {
 		return articleDao.getForPrintArticleRepliesFrom(articleId, from);
 	}
+
+	public Map<String, Object> deleteArticleReply(int id) {
+		articleDao.deleteArticleReply(id);
+		Map<String, Object> rs = new HashMap<>();
+
+		rs.put("resultCode", "S-1");
+		rs.put("msg", String.format("%d번 게시물 댓글이 삭제되었습니다.", id));
+
+		return rs;
+	}
 }

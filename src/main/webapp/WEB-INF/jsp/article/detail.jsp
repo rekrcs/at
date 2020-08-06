@@ -9,10 +9,31 @@
 	var articleId = parseInt('${article.id}');
 </script>
 
+<script>
+	var ArticleReply__loadListDelay = 1000;
+
+	// 임시
+	ArticleReply__loadListDelay = 5000;
+</script>
 <style>
 a {
 	text-decoration: none;
 	color: inherit;
+}
+
+/* 댓글 ajax화 */
+.article-reply-list-box tr .loading-inline {
+	display: none;
+	font-weit: bold;
+	color: red;
+}
+
+.article-reply-list-box tr[data-loading="Y"] .loading-none {
+	display: none;
+}
+
+.article-reply-list-box tr[data-loading="Y"] .loading-inline {
+	display: inline;
 }
 
 /* 게시물 수정 삭제 버튼 시작 */
@@ -191,7 +212,7 @@ a {
 				ArticleReply__lastLoadedArticleReplyId = articleReply.id;
 			}
 
-			setTimeout(ArticleReply__loadList, 1000);
+			setTimeout(ArticleReply__loadList, ArticleReply__loadListDelay);
 		}, 'json');
 	}
 
@@ -227,7 +248,19 @@ a {
 	});
 
 	function ArticleReply__delete(obj) {
-		alert(obj);
+		var $clickedBtn = $(obj);
+		var $tr = $clickedBtn.closest('tr');
+
+		var replyId = parseInt($tr.attr('data-article-reply-id'));
+
+		$tr.attr('data-loading', 'Y');
+
+		$.post('./doDeleteReplyAjax', {
+			id : replyId
+		}, function(data) {
+			$tr.remove();
+			$tr.attr('data-loading', 'N');
+		}, 'json');
 	}
 </script>
 
@@ -238,9 +271,10 @@ a {
 				<td>{$번호}</td>
 				<td>{$날짜}</td>
 				<td>{$내용}</td>
-				<td><a href="#"
+				<td><span class="loading-inline">삭제중입니다...</span><a
+					class="loading-none" href="#"
 					onclick="if ( confirm('정말 삭제하시겠습니까?') ) { ArticleReply__delete(this); } return false;">삭제</a>
-					<a href="#" onclick="return false;">수정</a></td>
+					<a class="loading-none" href="#" onclick="return false;">수정</a></td>
 			</tr>
 		</tbody>
 	</table>
@@ -263,17 +297,7 @@ a {
 			</tr>
 		</thead>
 		<tbody>
-			<%-- <c:forEach items="${articleReplies}" var="articleReply"> 
-				<tr>
-					<td>${articleReply.id}</td>
-					<td>${articleReply.regDate}</td>
-					<td>${articleReply.body}</td>
-					<td><a href="./modifyReply?id=${articleReply.id}">수정</a> <a
-						href="./doDeleteReply?id=${articleReply.id}&articleId=${article.id}"
-						onclick="if ( confirm('삭제하시겠습니까?') == false ) { return false; }">삭제</a>
-					</td>
-				</tr>
-			</c:forEach>--%>
+
 		</tbody>
 	</table>
 </div>
