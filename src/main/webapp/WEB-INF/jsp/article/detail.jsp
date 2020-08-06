@@ -364,7 +364,8 @@ a {
 					<div class="modify-mode-block">
 						<form
 							onsubmit="ArticleReply__submitModifyReplyForm(this); return false;">
-							<textarea name="body">{$내용}</textarea>
+							<textarea style="width: 100%; resize: none" maxlength="300"
+								class="min-height-100px" name="body">{$내용}</textarea>
 							<br /> <input class="loading-none" type="submit" value="수정" />
 						</form>
 					</div>
