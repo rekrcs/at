@@ -114,4 +114,15 @@ public class ArticleService {
 
 		return rs;
 	}
+
+	public Map<String, Object> modifyArticleReply(Map<String, Object> param) {
+		articleDao.modifyArticleReply(param);
+		int id = Util.getAsInt(param.get("id"));
+		Map<String, Object> rs = new HashMap<>();
+
+		rs.put("resultCode", "S-1");
+		rs.put("msg", String.format("%d번 게시물 댓글이 수정되었습니다.", id));
+
+		return rs;
+	}
 }

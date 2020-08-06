@@ -230,6 +230,23 @@ public class ArticleController {
 		return sb.toString();
 	}
 
+	@RequestMapping("article/doModifyReplyAjax")
+	@ResponseBody
+	public Map<String, Object> doModifyReplyAjax(@RequestParam Map<String, Object> param) {
+
+		int id = Integer.parseInt((String) param.get("id"));
+
+		Map<String, Object> rs = articleService.modifyArticleReply(param);
+
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		return rs;
+	}
+
 	@RequestMapping("article/doWriteReplyAjax")
 	@ResponseBody
 	public Map<String, Object> doWriteReplyAjax(@RequestParam Map<String, Object> param) {

@@ -22,9 +22,9 @@ a {
 }
 
 /* 댓글 ajax화 */
-.article-reply-list-box tr .loading-inline {
+.article-reply-list-box tr .loading-delete-inline {
 	display: none;
-	font-weit: bold;
+	font-weight: bold;
 	color: red;
 }
 
@@ -32,7 +32,28 @@ a {
 	display: none;
 }
 
-.article-reply-list-box tr[data-loading="Y"] .loading-inline {
+.article-reply-list-box tr[data-loading="Y"][data-loading-delete="Y"] .loading-delete-inline
+	{
+	display: inline;
+}
+
+.article-reply-list-box tr[data-modify-mode="Y"] .modify-mode-none {
+	display: none;
+}
+
+.article-reply-list-box tr .modify-mode-inline {
+	display: none;
+}
+
+.article-reply-list-box tr .modify-mode-block {
+	display: none;
+}
+
+.article-reply-list-box tr[data-modify-mode="Y"] .modify-mode-block {
+	display: block;
+}
+
+.article-reply-list-box tr[data-modify-mode="Y"] .modify-mode-inline {
 	display: inline;
 }
 
@@ -247,6 +268,64 @@ a {
 		ArticleReply__loadList();
 	});
 
+	function ArticleReply__enableModifyMode(obj) {
+		var $clickedBtn = $(obj);
+		var $tr = $clickedBtn.closest('tr');
+
+		var $replyBodyText = $tr.find('.reply-body-text');
+		var $textarea = $tr.find('form textarea');
+
+		$textarea.val($replyBodyText.text().trim());
+
+		$tr.attr('data-modify-mode', 'Y');
+	}
+
+	function ArticleReply__disableModifyMode(obj) {
+		var $clickedBtn = $(obj);
+		var $tr = $clickedBtn.closest('tr');
+
+		$tr.attr('data-modify-mode', 'N');
+	}
+
+	function ArticleReply__submitModifyReplyForm(form) {
+		var $tr = $(form).closest('tr');
+		form.body.value = form.body.value.trim();
+
+		if (form.body.value.length == 0) {
+			alert('댓글내용을 입력 해주세요.');
+			form.body.focus();
+
+			return false;
+		}
+
+		var replyId = parseInt($tr.attr('data-article-reply-id'));
+		var body = form.body.value;
+
+		$tr.attr('data-loading', 'Y');
+		$tr.attr('data-loading-modify', 'Y');
+
+		$.post('./doModifyReplyAjax', {
+			id : replyId,
+			body : body
+		}, function(data) {
+			$tr.attr('data-loading', 'N');
+			$tr.attr('data-loading-modify', 'N');
+
+			ArticleReply__disableModifyMode(form);
+
+			if (data.resultCode.substr(0, 2) == 'S-') {
+				var $replyBodyText = $tr.find('.reply-body-text');
+				var $textarea = $tr.find('form textarea');
+
+				$replyBodyText.text($textarea.val());
+			} else {
+				if (data.msg) {
+					alert(data.msg)
+				}
+			}
+		});
+	}
+
 	function ArticleReply__delete(obj) {
 		var $clickedBtn = $(obj);
 		var $tr = $clickedBtn.closest('tr');
@@ -254,12 +333,21 @@ a {
 		var replyId = parseInt($tr.attr('data-article-reply-id'));
 
 		$tr.attr('data-loading', 'Y');
+		$tr.attr('data-loading-delete', 'Y');
 
 		$.post('./doDeleteReplyAjax', {
 			id : replyId
 		}, function(data) {
-			$tr.remove();
 			$tr.attr('data-loading', 'N');
+			$tr.attr('data-loading-delete', 'N');
+
+			if (data.resultCode.substr(0, 2) == 'S-') {
+				$tr.remove();
+			} else {
+				if (data.msg) {
+					alert(data.msg)
+				}
+			}
 		}, 'json');
 	}
 </script>
@@ -270,11 +358,25 @@ a {
 			<tr data-article-reply-id="{$번호}">
 				<td>{$번호}</td>
 				<td>{$날짜}</td>
-				<td>{$내용}</td>
-				<td><span class="loading-inline">삭제중입니다...</span><a
+				<td>
+					<div class="reply-body-text modify-mode-none">{$내용}</div>
+
+					<div class="modify-mode-block">
+						<form
+							onsubmit="ArticleReply__submitModifyReplyForm(this); return false;">
+							<textarea name="body">{$내용}</textarea>
+							<br /> <input class="loading-none" type="submit" value="수정" />
+						</form>
+					</div>
+				</td>
+				<td><span class="loading-delete-inline">삭제중입니다...</span> <a
 					class="loading-none" href="#"
 					onclick="if ( confirm('정말 삭제하시겠습니까?') ) { ArticleReply__delete(this); } return false;">삭제</a>
-					<a class="loading-none" href="#" onclick="return false;">수정</a></td>
+					<a class="loading-none modify-mode-none" href="#"
+					onclick="ArticleReply__enableModifyMode(this); return false;">수정</a>
+					<a class="loading-none modify-mode-inline" href="#"
+					onclick="ArticleReply__disableModifyMode(this); return false;">수정취소</a>
+				</td>
 			</tr>
 		</tbody>
 	</table>

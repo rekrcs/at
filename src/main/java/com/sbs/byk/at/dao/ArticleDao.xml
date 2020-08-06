@@ -189,4 +189,12 @@
 		WHERE id =
 		#{id}
 	</update>
+
+	<update id="modifyArticleReply">
+		UPDATE articleReply
+		SET
+		body = #{body},
+		updateDate = NOW()
+		WHERE id = #{id}
+	</update>
 </mapper>
