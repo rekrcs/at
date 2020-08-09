@@ -2,14 +2,14 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<c:set var="pageTitle" value="게시물 수정" />
+<c:set var="pageTitle" value="게시물 작성" />
 <%@ include file="../part/head.jspf"%>
 
 <script>
-	var ArticleModifyForm__submitDone = false;
+	var ArticleWriteForm__submitDone = false;
 
-	function ArticleModifyForm__submit(form) {
-		if (ArticleModifyForm__submitDone) {
+	function ArticleWriteForm__submit(form) {
+		if (ArticleWriteForm__submitDone) {
 			alert('처리중입니다.');
 			return;
 		}
@@ -33,7 +33,7 @@
 		}
 
 		form.submit();
-		ArticleModifyForm__submitDone = true;
+		ArticleWriteForm__submitDone = true;
 	}
 </script>
 
@@ -63,9 +63,10 @@ a {
 	color: red;
 }
 </style>
-<form method="POST" class="form1" action="doModify"
-	onsubmit="ArticleModifyForm__submit(this); return false;">
-	<input type="hidden" name="id" value="${article.id}" />
+
+<form method="POST" class="form1" action="doWrite"
+	onsubmit="ArticleWriteForm__submit(this); return false;">
+	<input type="hidden" name="redirectUrl" value="/article/detail?id=#id">
 	<div class="table-box con">
 		<table>
 			<tbody>
@@ -74,7 +75,7 @@ a {
 					<td>
 						<div class="form-control-box">
 							<input type="text" placeholder="제목을 입력해주세요." name="title"
-								maxlength="100" value="${article.title}" />
+								maxlength="100" />
 						</div>
 					</td>
 				</tr>
@@ -82,7 +83,7 @@ a {
 					<th>내용</th>
 					<td>
 						<div class="form-control-box">
-							<textarea placeholder="내용을 입력해주세요." name="body" maxlength="2000">${article.body}</textarea>
+							<textarea placeholder="내용을 입력해주세요." name="body" maxlength="2000"></textarea>
 						</div>
 					</td>
 				</tr>

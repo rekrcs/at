@@ -7,7 +7,6 @@
 
 <style>
 a {
-	text-decoration: none;
 	color: inherit;
 }
 /* 수정 삭제 버튼 시작 */
@@ -50,6 +49,12 @@ a {
 	display: flex;
 	justify-content: center;
 }
+
+.search-box {
+	margin-top: 10px;
+	display: flex;
+	justify-content: center;
+}
 </style>
 
 
@@ -87,8 +92,18 @@ a {
 	</ul>
 </div>
 
-<div class="btns con">
-	<a href="./add">게시물 추가</a>
+<div class="con search-box">
+	<form action="list">
+		<input type="hidden" name="page" value="1" /> <input type="hidden"
+			name="cateItemId" value="${param.cateItemId}" /> <input
+			type="hidden" name="searchKeywordType" value="title" /> <input
+			type="text" name="searchKeyword" value="${param.searchKeyword}" />
+		<button type="submit">검색</button>
+	</form>
+</div>
+
+<div class="btns con" >
+	<a style="text-decoration: none" href="./write">게시물 작성</a>
 </div>
 
 

@@ -44,6 +44,23 @@ label[for] {
 	text-align: left;
 }
 
+/* 폼 관련 라이브러리 */
+.form1 .form-control-box>input, .form1 .form-control-box>textarea {
+	width: 100%;
+	padding: 0;
+	display: block;
+	box-sizing: border-box;
+	padding: 10px;
+}
+
+.form1 .form-control-box>textarea {
+	min-height: 300px;
+	resize: none;
+}
+
+.min-height-100px {
+	min-height: 100px !important;
+}
 /* 커스텀 */
 .con {
 	max-width: 1200px;
@@ -54,52 +71,8 @@ label[for] {
 	margin-bottom: 30px;
 }
 
-/* lib */
-.form1 {
-	display: block;
-	width: 100%;
-}
-
-.form1 .form-row {
-	align-items: center;
-	display: flex;
-}
-
-.form1 .form-row>.label {
-	width: 100px;
-}
-
-.form1 .form-row>.input {
-	flex-grow: 1;
-}
-
-.form1 .form-row>.input>input, .form1 .form-row>.input>textarea {
-	display: block;
-	width: 100%;
-	box-sizing: border-box;
-	padding: 10px;
-}
-
-.form1 .form-row>.input>select {
-	padding: 10px;
-}
-
-.form1 .form-row>.input>textarea {
-	height: 500px;
-}
-
-.form1 .message {
-	color: red;
-}
-
-@media ( max-width : 700px ) {
-	.form1 .form-row {
-		display: block;
-	}
-}
-
-.form1 .form-row {
-	margin-top: 10px;
+.template-box {
+	display: none;
 }
 
 /*홈으로 돌아가기*/
@@ -108,7 +81,7 @@ label[for] {
 	border-top: 1px solid rgba(0, 0, 0, .2);
 	border-bottom: 1px solid rgba(0, 0, 0, .2);
 	padding: 20px 0;
-	margin-top: 50px;
+	margin: 50px 0;
 	width: 50%;
 	margin-right: auto;
 	margin-left: auto;
