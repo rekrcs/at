@@ -23,7 +23,7 @@ public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
 
-	@RequestMapping("article/getForPrintArticleRepliesRs")
+	@RequestMapping("/usr/article/getForPrintArticleRepliesRs")
 	@ResponseBody
 	public Map<String, Object> getForPrintArticleRepliesRs(int articleId, int from) {
 		List<ArticleReply> articleReplies = articleService.getForPrintArticleReplies(articleId, from);
@@ -36,7 +36,7 @@ public class ArticleController {
 		return rs;
 	}
 
-	@RequestMapping("/article/list")
+	@RequestMapping("/usr/article/list")
 	public String showList(Model model, String page, String searchKeyword, String searchKeywordType) {
 		if (page == null) {
 			page = "1";
@@ -59,7 +59,7 @@ public class ArticleController {
 		return "article/list";
 	}
 
-	@RequestMapping("/article/detail")
+	@RequestMapping("/usr/article/detail")
 	public String showDetail(Model model, int id) {
 		Article article = articleService.getOne(id);
 
