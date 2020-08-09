@@ -1,4 +1,4 @@
-package com.sbs.jhs.at.interceptor;
+package com.sbs.byk.at.interceptor;
 
 import java.net.URLEncoder;
 import java.util.Enumeration;
@@ -15,8 +15,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sbs.jhs.at.dto.Member;
-import com.sbs.jhs.at.service.MemberService;
+import com.sbs.byk.at.dto.Member;
+import com.sbs.byk.at.service.MemberService;
+
 
 @Component("beforeActionInterceptor") // 컴포넌트 이름 설정
 public class BeforeActionInterceptor implements HandlerInterceptor {

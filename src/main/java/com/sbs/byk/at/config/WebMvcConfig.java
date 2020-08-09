@@ -1,4 +1,4 @@
-package com.sbs.jhs.at.config;
+package com.sbs.byk.at.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
