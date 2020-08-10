@@ -70,7 +70,9 @@ public class ArticleService {
 	}
 
 	public int writeReply(Map<String, Object> param) {
-		return articleDao.writeReply(param);
+		articleDao.writeReply(param);
+
+		return Util.getAsInt(param.get("id"));
 	}
 
 	public List<ArticleReply> getForPrintArticleReplies(int articleId) {
@@ -88,17 +90,6 @@ public class ArticleService {
 	public void modifyReply(Map<String, Object> param) {
 		articleDao.modifyReply(param);
 
-	}
-
-	public Map<String, Object> writeReply1(Map<String, Object> param) {
-		articleDao.writeReply(param);
-		int id = Util.getAsInt(param.get("id"));
-		Map<String, Object> rs = new HashMap<>();
-
-		rs.put("resultCode", "S-1");
-		rs.put("msg", String.format("%d번 게시물 댓글이 생성되었습니다.", id));
-
-		return rs;
 	}
 
 	public List<ArticleReply> getForPrintArticleReplies(int articleId, int from) {

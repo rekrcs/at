@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dto.Article;
 import com.sbs.byk.at.dto.ArticleReply;
+import com.sbs.byk.at.dto.ResultData;
 import com.sbs.byk.at.service.ArticleService;
 
 @Controller
@@ -249,10 +250,12 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/doWriteReplyAjax")
 	@ResponseBody
-	public Map<String, Object> doWriteReplyAjax(@RequestParam Map<String, Object> param) {
+	public ResultData doWriteReplyAjax(@RequestParam Map<String, Object> param, HttpServletRequest request) {
+		Map<String, Object> rsDataBody = new HashMap<>();
+		param.put("memberId", request.getAttribute("loginedMemberId"));
+		int newArticleReplyId = articleService.writeReply(param);
+		rsDataBody.put("articleReplyId", newArticleReplyId);
 
-		Map<String, Object> rs = articleService.writeReply1(param);
-
-		return rs;
+		return new ResultData("S-1", String.format("%d번 댓글이 생성되었습니다.", newArticleReplyId), rsDataBody);
 	}
 }

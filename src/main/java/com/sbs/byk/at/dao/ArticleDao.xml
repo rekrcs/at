@@ -116,13 +116,15 @@
 	</select>
 
 	<insert id="writeReply" useGeneratedKeys="true" keyProperty="id">
-		INSERT
-		INTO articleReply
+		INSERT INTO articleReply
 		SET regDate = NOW(),
 		updateDate = NOW(),
-		displayStatus = 1,
+		body =
+		#{body},
+		memberId = #{memberId},
 		articleId = #{articleId},
-		body = #{body}
+		displayStatus
+		= 1
 	</insert>
 
 	<select id="getForPrintArticleReplies" parameterType="int"
@@ -194,7 +196,8 @@
 		UPDATE articleReply
 		SET
 		body = #{body},
-		updateDate = NOW()
+		updateDate =
+		NOW()
 		WHERE id = #{id}
 	</update>
 </mapper>
