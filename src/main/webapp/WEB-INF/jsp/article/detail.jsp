@@ -240,6 +240,7 @@ a {
 
 		html = replaceAll(html, "{$번호}", articleReply.id);
 		html = replaceAll(html, "{$날짜}", articleReply.regDate);
+		html = replaceAll(html, "{$작성자}", articleReply.extra.writer);
 		html = replaceAll(html, "{$내용}", articleReply.body);
 
 		/*
@@ -354,6 +355,7 @@ a {
 			<tr data-article-reply-id="{$번호}">
 				<td>{$번호}</td>
 				<td>{$날짜}</td>
+				<td>{$작성자}</td>
 				<td>
 					<div class="reply-body-text modify-mode-none">{$내용}</div>
 
@@ -384,6 +386,7 @@ a {
 		<colgroup>
 			<col width="80">
 			<col width="180">
+			<col width="180">
 			<col>
 			<col width="200">
 		</colgroup>
@@ -391,6 +394,7 @@ a {
 			<tr>
 				<th>번호</th>
 				<th>날짜</th>
+				<th>작성자</th>
 				<th>내용</th>
 				<th>비고</th>
 			</tr>
