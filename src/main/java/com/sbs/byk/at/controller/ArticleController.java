@@ -81,12 +81,12 @@ public class ArticleController {
 		return "article/detail";
 	}
 
-	@RequestMapping("/article/write")
+	@RequestMapping("/usr/article/write")
 	public String showWrite() {
 		return "article/write";
 	}
 
-	@RequestMapping("/article/doWrite")
+	@RequestMapping("/usr/article/doWrite")
 	@ResponseBody
 	public String doWrite(@RequestParam Map<String, Object> param) {
 		int newArticleId = articleService.write(param);
@@ -104,7 +104,7 @@ public class ArticleController {
 		return sb.toString();
 	}
 
-	@RequestMapping("/article/modify")
+	@RequestMapping("/usr/article/modify")
 	public String showModify(Model model, int id) {
 		Article article = articleService.getOne(id);
 
@@ -113,7 +113,7 @@ public class ArticleController {
 		return "article/modify";
 	}
 
-	@RequestMapping("/article/doModify")
+	@RequestMapping("/usr/article/doModify")
 	@ResponseBody
 	public String doModify(@RequestParam Map<String, Object> param, int id) {
 		articleService.modify(param);
@@ -131,7 +131,7 @@ public class ArticleController {
 		return sb.toString();
 	}
 
-	@RequestMapping("/article/doDelete")
+	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
 	public String doDelete(int id) {
 		articleService.delete(id);
@@ -149,7 +149,7 @@ public class ArticleController {
 		return sb.toString();
 	}
 
-	@RequestMapping("/article/doWriteReply")
+	@RequestMapping("/usr/article/doWriteReply")
 	@ResponseBody
 	public String doWriteReply(@RequestParam Map<String, Object> param) {
 		int articleId = Util.getAsInt(param.get("articleId"));
@@ -167,7 +167,7 @@ public class ArticleController {
 		return sb.toString();
 	}
 
-	@RequestMapping("/article/doDeleteReply")
+	@RequestMapping("/usr/article/doDeleteReply")
 	@ResponseBody
 	public String doDeleteReply(int id, int articleId) {
 		articleService.deleteReply(id);
@@ -185,7 +185,7 @@ public class ArticleController {
 		return sb.toString();
 	}
 
-	@RequestMapping("/article/doDeleteReplyAjax")
+	@RequestMapping("/usr/article/doDeleteReplyAjax")
 	@ResponseBody
 	public Map<String, Object> doDeleteReply(int id) {
 
@@ -200,7 +200,7 @@ public class ArticleController {
 		return rs;
 	}
 
-	@RequestMapping("/article/modifyReply")
+	@RequestMapping("/usr/article/modifyReply")
 	public String showModifyReply(Model model, int id) {
 		ArticleReply articleReply = articleService.getArticleReplyById(id);
 
@@ -209,7 +209,7 @@ public class ArticleController {
 		return "article/modifyReply";
 	}
 
-	@RequestMapping("/article/doModifyReply")
+	@RequestMapping("/usr/article/doModifyReply")
 	@ResponseBody
 	public String doModifyReply(@RequestParam Map<String, Object> param) {
 		int id = Util.getAsInt(param.get("id"));
@@ -230,7 +230,7 @@ public class ArticleController {
 		return sb.toString();
 	}
 
-	@RequestMapping("article/doModifyReplyAjax")
+	@RequestMapping("/usr/article/doModifyReplyAjax")
 	@ResponseBody
 	public Map<String, Object> doModifyReplyAjax(@RequestParam Map<String, Object> param) {
 
@@ -247,7 +247,7 @@ public class ArticleController {
 		return rs;
 	}
 
-	@RequestMapping("article/doWriteReplyAjax")
+	@RequestMapping("/usr/article/doWriteReplyAjax")
 	@ResponseBody
 	public Map<String, Object> doWriteReplyAjax(@RequestParam Map<String, Object> param) {
 
