@@ -13,6 +13,7 @@ import com.sbs.byk.at.dao.ArticleDao;
 import com.sbs.byk.at.dto.Article;
 import com.sbs.byk.at.dto.ArticleReply;
 import com.sbs.byk.at.dto.Member;
+import com.sbs.byk.at.dto.ResultData;
 
 @Service
 public class ArticleService {
@@ -89,9 +90,9 @@ public class ArticleService {
 		return articleDao.getArticleReplyById(id);
 	}
 
-	public void modifyReply(Map<String, Object> param) {
+	public ResultData modifyReply(Map<String, Object> param) {
 		articleDao.modifyReply(param);
-
+		return new ResultData("S-1", String.format("%d번 댓글을 수정하였습니다.", Util.getAsInt(param.get("id"))), param);
 	}
 
 	public List<ArticleReply> getForPrintArticleReplies(@RequestParam Map<String, Object> param) {
@@ -110,17 +111,17 @@ public class ArticleService {
 
 	private void updateForPrintInfo(Member actor, ArticleReply articleReply) {
 		articleReply.getExtra().put("actorCanDelete", actorCanDelete(actor, articleReply));
-		articleReply.getExtra().put("actorCanUpdate", actorCanUpdate(actor, articleReply));
+		articleReply.getExtra().put("actorCanModify", actorCanModify(actor, articleReply));
 	}
 
 	// 액터가 해당 댓글을 수정할 수 있는지 알려준다.
-	private Object actorCanUpdate(Member actor, ArticleReply articleReply) {
+	public boolean actorCanModify(Member actor, ArticleReply articleReply) {
 		return actor != null && actor.getId() == articleReply.getMemberId() ? true : false;
 	}
 
 	// 액터가 해당 댓글을 삭제할 수 있는지 알려준다.
-	private Object actorCanDelete(Member actor, ArticleReply articleReply) {
-		return actorCanUpdate(actor, articleReply);
+	public boolean actorCanDelete(Member actor, ArticleReply articleReply) {
+		return actorCanModify(actor, articleReply);
 	}
 
 	public Map<String, Object> deleteArticleReply(int id) {
@@ -143,4 +144,5 @@ public class ArticleService {
 
 		return rs;
 	}
+
 }

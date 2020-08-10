@@ -162,54 +162,58 @@ a {
 		</a> </span>
 	</c:if>
 </div>
-<h2 class="con">댓글 작성</h2>
 
-<script>
-	function ArticleReply__submitWriteForm(form) {
-		form.body.value = form.body.value.trim();
+<c:if test="${isLogined}">
+	<h2 class="con">댓글 작성</h2>
 
-		if (form.body.value.length == 0) {
-			alert('댓글을 입력해주세요.');
-			form.body.focus();
+	<script>
+		function ArticleReply__submitWriteForm(form) {
+			form.body.value = form.body.value.trim();
 
-			return;
+			if (form.body.value.length == 0) {
+				alert('댓글을 입력해주세요.');
+				form.body.focus();
+
+				return;
+			}
+
+			$.post('./doWriteReplyAjax', {
+				articleId : param.id,
+				body : form.body.value
+			}, function(data) {
+
+			}, 'json');
+
+			form.body.value = '';
 		}
+	</script>
 
-		$.post('./doWriteReplyAjax', {
-			articleId : param.id,
-			body : form.body.value
-		}, function(data) {
+	<form action="" class="form1"
+		onsubmit="ArticleReply__submitWriteForm(this); return false;">
+		<div class="table-box con">
+			<table>
+				<tbody>
+					<tr>
+						<th>내용</th>
+						<td>
+							<div class="form-control-box ">
+								<textarea class="min-height-100px" placeholder="내용을 입력해주세요."
+									name="body" maxlength="300"></textarea>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th>작성</th>
+						<td>
+							<button class="btn btn-primary" type="submit">작성</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</form>
+</c:if>
 
-		}, 'json');
-
-		form.body.value = '';
-	}
-</script>
-
-<form action="" class="form1"
-	onsubmit="ArticleReply__submitWriteForm(this); return false;">
-	<div class="table-box con">
-		<table>
-			<tbody>
-				<tr>
-					<th>내용</th>
-					<td>
-						<div class="form-control-box ">
-							<textarea class="min-height-100px" placeholder="내용을 입력해주세요."
-								name="body" maxlength="300"></textarea>
-						</div>
-					</td>
-				</tr>
-				<tr>
-					<th>작성</th>
-					<td>
-						<button class="btn btn-primary" type="submit">작성</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-</form>
 
 <h2 class="con">댓글 리스트</h2>
 
@@ -368,14 +372,14 @@ a {
 						</form>
 					</div>
 				</td>
-				<td><span class="loading-delete-inline">삭제중입니다...</span> <a
-					class="loading-none" href="#"
-					onclick="if ( confirm('정말 삭제하시겠습니까?') ) { ArticleReply__delete(this); } return false;">삭제</a>
-					<a class="loading-none modify-mode-none" href="#"
-					onclick="ArticleReply__enableModifyMode(this); return false;">수정</a>
-					<a class="loading-none modify-mode-inline" href="#"
-					onclick="ArticleReply__disableModifyMode(this); return false;">수정취소</a>
-				</td>
+					<td><span class="loading-delete-inline">삭제중입니다...</span> <a
+						class="loading-none" href="#"
+						onclick="if ( confirm('정말 삭제하시겠습니까?') ) { ArticleReply__delete(this); } return false;">삭제</a>
+						<a class="loading-none modify-mode-none" href="#"
+						onclick="ArticleReply__enableModifyMode(this); return false;">수정</a>
+						<a class="loading-none modify-mode-inline" href="#"
+						onclick="ArticleReply__disableModifyMode(this); return false;">수정취소</a>
+					</td>
 			</tr>
 		</tbody>
 	</table>

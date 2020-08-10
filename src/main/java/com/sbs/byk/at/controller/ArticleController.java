@@ -27,8 +27,9 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/getForPrintArticleRepliesRs")
 	@ResponseBody
-	public Map<String, Object> getForPrintArticleRepliesRs(@RequestParam Map<String, Object> param, HttpServletRequest req) {
-		Member loginedMember = (Member)req.getAttribute("loginedMember");
+	public Map<String, Object> getForPrintArticleRepliesRs(@RequestParam Map<String, Object> param,
+			HttpServletRequest req) {
+		Member loginedMember = (Member) req.getAttribute("loginedMember");
 		param.put("actor", loginedMember);
 		List<ArticleReply> articleReplies = articleService.getForPrintArticleReplies(param);
 
@@ -191,17 +192,17 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/doDeleteReplyAjax")
 	@ResponseBody
-	public Map<String, Object> doDeleteReply(int id) {
+	public ResultData doDeleteReplyAjax(int id, HttpServletRequest req) {
+		Member loginedMember = (Member) req.getAttribute("loginedMember");
+		ArticleReply articleReply = articleService.getArticleReplyById(id);
 
-		Map<String, Object> rs = articleService.deleteArticleReply(id);
+		if (articleService.actorCanDelete(loginedMember, articleReply) == false) {
+			return new ResultData("F-1", String.format("%d번 댓글을 삭제할 권한이 없습니다.", id));
+		}
 
-//		try {
-//			Thread.sleep(3000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		articleService.deleteReply(id);
 
-		return rs;
+		return new ResultData("S-1", String.format("%d번 댓글을 삭제하였습니다.", id));
 	}
 
 	@RequestMapping("/usr/article/modifyReply")
@@ -236,19 +237,25 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/doModifyReplyAjax")
 	@ResponseBody
-	public Map<String, Object> doModifyReplyAjax(@RequestParam Map<String, Object> param) {
+	public ResultData doModifyReplyAjax(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req, int id) {
 
-		int id = Integer.parseInt((String) param.get("id"));
+		Member loginedMember = (Member) req.getAttribute("loginedMember");
+		ArticleReply articleReply = articleService.getArticleReplyById(id);
+	
+		if (articleService.actorCanModify(loginedMember, articleReply) == false) {
+			return new ResultData("F-1", String.format("%d번 댓글을 수정할 권한이 없습니다.", id));
+		}
 
-		Map<String, Object> rs = articleService.modifyArticleReply(param);
+		Map<String, Object> modfiyReplyParam = Util.getNewMapOf(param, "id", "body");
+		ResultData rd = articleService.modifyReply(modfiyReplyParam);
 
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
-		return rs;
+		model.addAttribute("articleReply", articleReply);
+		return rd;
 	}
 
 	@RequestMapping("/usr/article/doWriteReplyAjax")
