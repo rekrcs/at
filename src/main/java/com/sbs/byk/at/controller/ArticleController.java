@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dto.Article;
 import com.sbs.byk.at.dto.ArticleReply;
+import com.sbs.byk.at.dto.Member;
 import com.sbs.byk.at.dto.ResultData;
 import com.sbs.byk.at.service.ArticleService;
 
@@ -26,7 +27,9 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/getForPrintArticleRepliesRs")
 	@ResponseBody
-	public Map<String, Object> getForPrintArticleRepliesRs(@RequestParam Map<String, Object> param) {
+	public Map<String, Object> getForPrintArticleRepliesRs(@RequestParam Map<String, Object> param, HttpServletRequest req) {
+		Member loginedMember = (Member)req.getAttribute("loginedMember");
+		param.put("actor", loginedMember);
 		List<ArticleReply> articleReplies = articleService.getForPrintArticleReplies(param);
 
 		Map<String, Object> rs = new HashMap<>();

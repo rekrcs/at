@@ -12,6 +12,7 @@ import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dao.ArticleDao;
 import com.sbs.byk.at.dto.Article;
 import com.sbs.byk.at.dto.ArticleReply;
+import com.sbs.byk.at.dto.Member;
 
 @Service
 public class ArticleService {
@@ -94,7 +95,32 @@ public class ArticleService {
 	}
 
 	public List<ArticleReply> getForPrintArticleReplies(@RequestParam Map<String, Object> param) {
-		return articleDao.getForPrintArticleRepliesFrom(param);
+		List<ArticleReply> articleReplies = articleDao.getForPrintArticleRepliesFrom(param);
+
+		Member actor = (Member) param.get("actor");
+
+		for (ArticleReply articleReply : articleReplies) {
+			// 출력용 부가데이터를 추가한다.
+			updateForPrintInfo(actor, articleReply);
+		}
+
+		return articleReplies;
+
+	}
+
+	private void updateForPrintInfo(Member actor, ArticleReply articleReply) {
+		articleReply.getExtra().put("actorCanDelete", actorCanDelete(actor, articleReply));
+		articleReply.getExtra().put("actorCanUpdate", actorCanUpdate(actor, articleReply));
+	}
+
+	// 액터가 해당 댓글을 수정할 수 있는지 알려준다.
+	private Object actorCanUpdate(Member actor, ArticleReply articleReply) {
+		return actor != null && actor.getId() == articleReply.getMemberId() ? true : false;
+	}
+
+	// 액터가 해당 댓글을 삭제할 수 있는지 알려준다.
+	private Object actorCanDelete(Member actor, ArticleReply articleReply) {
+		return actorCanUpdate(actor, articleReply);
 	}
 
 	public Map<String, Object> deleteArticleReply(int id) {
