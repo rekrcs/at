@@ -6,10 +6,6 @@
 <%@ include file="../part/head.jspf"%>
 
 <script>
-	var articleId = parseInt('${article.id}');
-</script>
-
-<script>
 	var ArticleReply__loadListDelay = 1000;
 
 	// 임시
@@ -180,7 +176,7 @@ a {
 		}
 
 		$.post('./doWriteReplyAjax', {
-			articleId : articleId,
+			articleId : param.id,
 			body : form.body.value
 		}, function(data) {
 
@@ -221,7 +217,7 @@ a {
 	var ArticleReply__lastLoadedArticleReplyId = 0;
 	function ArticleReply__loadList() {
 		$.get('./getForPrintArticleRepliesRs', {
-			articleId : articleId,
+			articleId : param.id,
 			from : ArticleReply__lastLoadedArticleReplyId + 1
 		}, function(data) {
 			data.articleReplies = data.articleReplies.reverse();
