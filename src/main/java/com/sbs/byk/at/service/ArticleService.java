@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dao.ArticleDao;
@@ -92,8 +93,8 @@ public class ArticleService {
 
 	}
 
-	public List<ArticleReply> getForPrintArticleReplies(int articleId, int from) {
-		return articleDao.getForPrintArticleRepliesFrom(articleId, from);
+	public List<ArticleReply> getForPrintArticleReplies(@RequestParam Map<String, Object> param) {
+		return articleDao.getForPrintArticleRepliesFrom(param);
 	}
 
 	public Map<String, Object> deleteArticleReply(int id) {

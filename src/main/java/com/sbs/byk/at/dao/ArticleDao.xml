@@ -139,15 +139,16 @@
 	</select>
 
 	<select id="getForPrintArticleRepliesFrom"
-		resultType="ArticleReply">
-		SELECT * FROM
-		articleReply
-		WHERE displayStatus = 1
-		AND
-		delStatus != 1
-		AND articleId = #{articleId}
-		AND id >= #{from}
-		ORDER BY id
+		resultMap="articleReply">
+		SELECT AR.*,
+		M.nickname AS extra__writer
+		FROM articleReply AS AR
+		INNER JOIN member AS M
+		ON AR.memberId = M.id
+		WHERE AR.articleId = #{articleId}
+		AND AR.displayStatus = 1
+		AND AR.id >= #{from}
+		ORDER BY AR.id
 		DESC
 	</select>
 
@@ -200,4 +201,29 @@
 		NOW()
 		WHERE id = #{id}
 	</update>
+	
+	<resultMap type="Article" id="article">
+		<id property="id" column="id" />
+		<id property="regDate" column="regDate" />
+		<id property="title" column="title" />
+		<id property="body" column="body" />
+		<id property="memberId" column="memberId" />
+		<id property="hit" column="hit" />
+		<id property="boardId" column="boardId" />
+		<association property="extra" javaType="map">
+			<id property="writer" column="extra__writer" />
+			<id property="likePoint" column="extra__likePoint" />
+		</association>
+	</resultMap>
+
+	<resultMap type="ArticleReply" id="articleReply">
+		<id property="id" column="id" />
+		<id property="regDate" column="regDate" />
+		<id property="body" column="body" />
+		<id property="memberId" column="memberId" />
+		<id property="articleId" column="articleId" />
+		<association property="extra" javaType="map">
+			<id property="writer" column="extra__writer" />
+		</association>
+	</resultMap>
 </mapper>
