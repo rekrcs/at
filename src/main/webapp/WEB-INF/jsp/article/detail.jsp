@@ -139,29 +139,30 @@ a {
 	</div>
 </div>
 
-
-<div class="previous-next-box con">
-	<c:if test="${article.id == firstId}">
-		<span class="previous-btn"></span>
-		<span class="next-btn"><a href="detail?id=${articleNext.id}">다음글
-				(${articleNext.title}) <i class="fas fa-angle-right"></i>
-		</a></span>
-	</c:if>
-	<c:if test="${article.id == lastId}">
-		<span class="previous-btn"><a
-			href="detail?id=${articlePrevious.id}"><i
-				class="fas fa-angle-left"></i> (${articlePrevious.title}) 이전글</a></span>
-		<span class="next-btn"></span>
-	</c:if>
-	<c:if test="${article.id != lastId && article.id != firstId}">
-		<span class="previous-btn"><a
-			href="detail?id=${articlePrevious.id}"><i
-				class="fas fa-angle-left"></i> (${articlePrevious.title}) 이전글</a></span>
-		<span class="next-btn"><a href="detail?id=${articleNext.id}">다음글
-				(${articleNext.title}) <i class="fas fa-angle-right"></i>
-		</a> </span>
-	</c:if>
-</div>
+<c:if test="${firstId != lastId}">
+	<div class="previous-next-box con">
+		<c:if test="${article.id == firstId}">
+			<span class="previous-btn"></span>
+			<span class="next-btn"><a href="detail?id=${articleNext.id}">다음글
+					(${articleNext.title}) <i class="fas fa-angle-right"></i>
+			</a></span>
+		</c:if>
+		<c:if test="${article.id == lastId}">
+			<span class="previous-btn"><a
+				href="detail?id=${articlePrevious.id}"><i
+					class="fas fa-angle-left"></i> (${articlePrevious.title}) 이전글</a></span>
+			<span class="next-btn"></span>
+		</c:if>
+		<c:if test="${article.id != lastId && article.id != firstId}">
+			<span class="previous-btn"><a
+				href="detail?id=${articlePrevious.id}"><i
+					class="fas fa-angle-left"></i> (${articlePrevious.title}) 이전글</a></span>
+			<span class="next-btn"><a href="detail?id=${articleNext.id}">다음글
+					(${articleNext.title}) <i class="fas fa-angle-right"></i>
+			</a> </span>
+		</c:if>
+	</div>
+</c:if>
 
 <c:if test="${isLogined}">
 	<h2 class="con">댓글 작성</h2>
@@ -177,8 +178,9 @@ a {
 				return;
 			}
 
-			$.post('./doWriteReplyAjax', {
+			$.post('./../reply/doWriteReplyAjax', {
 				relId : param.id,
+				relTypeCode : 'article',
 				body : form.body.value
 			}, function(data) {
 
@@ -305,7 +307,7 @@ a {
 		$tr.attr('data-loading', 'Y');
 		$tr.attr('data-loading-modify', 'Y');
 
-		$.post('./doModifyReplyAjax', {
+		$.post('./../reply/doModifyReplyAjax', {
 			id : replyId,
 			body : body
 		}, function(data) {
@@ -336,7 +338,7 @@ a {
 		$tr.attr('data-loading', 'Y');
 		$tr.attr('data-loading-delete', 'Y');
 
-		$.post('./doDeleteReplyAjax', {
+		$.post('./../reply/doDeleteReplyAjax', {
 			id : replyId
 		}, function(data) {
 			$tr.attr('data-loading', 'N');
@@ -364,22 +366,20 @@ a {
 					<div class="reply-body-text modify-mode-none">{$내용}</div>
 
 					<div class="modify-mode-block">
-						<form
-							onsubmit="Reply__submitModifyReplyForm(this); return false;">
+						<form onsubmit="Reply__submitModifyReplyForm(this); return false;">
 							<textarea style="width: 100%; resize: none" maxlength="300"
 								class="min-height-100px" name="body">{$내용}</textarea>
 							<br /> <input class="loading-none" type="submit" value="수정" />
 						</form>
 					</div>
 				</td>
-					<td><span class="loading-delete-inline">삭제중입니다...</span> <a
-						class="loading-none" href="#"
-						onclick="if ( confirm('정말 삭제하시겠습니까?') ) { Reply__delete(this); } return false;">삭제</a>
-						<a class="loading-none modify-mode-none" href="#"
-						onclick="Reply__enableModifyMode(this); return false;">수정</a>
-						<a class="loading-none modify-mode-inline" href="#"
-						onclick="Reply__disableModifyMode(this); return false;">수정취소</a>
-					</td>
+				<td><span class="loading-delete-inline">삭제중입니다...</span> <a
+					class="loading-none" href="#"
+					onclick="if ( confirm('정말 삭제하시겠습니까?') ) { Reply__delete(this); } return false;">삭제</a>
+					<a class="loading-none modify-mode-none" href="#"
+					onclick="Reply__enableModifyMode(this); return false;">수정</a> <a
+					class="loading-none modify-mode-inline" href="#"
+					onclick="Reply__disableModifyMode(this); return false;">수정취소</a></td>
 			</tr>
 		</tbody>
 	</table>

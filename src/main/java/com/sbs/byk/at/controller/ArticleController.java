@@ -19,11 +19,14 @@ import com.sbs.byk.at.dto.Reply;
 import com.sbs.byk.at.dto.Member;
 import com.sbs.byk.at.dto.ResultData;
 import com.sbs.byk.at.service.ArticleService;
+import com.sbs.byk.at.service.ReplyService;
 
 @Controller
 public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
+	@Autowired
+	private ReplyService replyService;
 
 	@RequestMapping("/usr/article/getForPrintRepliesRs")
 	@ResponseBody
@@ -31,7 +34,7 @@ public class ArticleController {
 		Member loginedMember = (Member) req.getAttribute("loginedMember");
 		param.put("actor", loginedMember);
 		param.put("relTypeCode", "article");
-		List<Reply> replies = articleService.getForPrintReplies(param);
+		List<Reply> replies = replyService.getForPrintReplies(param);
 
 		Map<String, Object> rs = new HashMap<>();
 		rs.put("resultCode", "S-1");
@@ -152,121 +155,5 @@ public class ArticleController {
 		sb.append("</script>");
 
 		return sb.toString();
-	}
-
-	@RequestMapping("/usr/article/doWriteReply")
-	@ResponseBody
-	public String doWriteReply(@RequestParam Map<String, Object> param) {
-		int articleId = Util.getAsInt(param.get("articleId"));
-		articleService.writeReply(param);
-
-		String msg = articleId + "번 게시물에 댓글을 작성했습니다.";
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("alert('" + msg + "');");
-		sb.append("location.replace('./detail?id=" + articleId + "');");
-
-		sb.insert(0, "<script>");
-		sb.append("</script>");
-		return sb.toString();
-	}
-
-	@RequestMapping("/usr/article/doDeleteReply")
-	@ResponseBody
-	public String doDeleteReply(int id, int articleId) {
-		articleService.deleteReply(id);
-
-		String msg = "댓글이 삭제되었습니다.";
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("alert('" + msg + "');");
-		sb.append("location.replace('./detail?id=" + articleId + "');");
-
-		sb.insert(0, "<script>");
-		sb.append("</script>");
-
-		return sb.toString();
-	}
-
-	@RequestMapping("/usr/article/doDeleteReplyAjax")
-	@ResponseBody
-	public ResultData doDeleteReplyAjax(int id, HttpServletRequest req) {
-		Member loginedMember = (Member) req.getAttribute("loginedMember");
-		Reply reply = articleService.getReplyById(id);
-
-		if (articleService.actorCanDelete(loginedMember, reply) == false) {
-			return new ResultData("F-1", String.format("%d번 댓글을 삭제할 권한이 없습니다.", id));
-		}
-
-		articleService.deleteReply(id);
-
-		return new ResultData("S-1", String.format("%d번 댓글을 삭제하였습니다.", id));
-	}
-
-	@RequestMapping("/usr/article/modifyReply")
-	public String showModifyReply(Model model, int id) {
-		Reply reply = articleService.getReplyById(id);
-
-		model.addAttribute("reply", reply);
-
-		return "article/modifyReply";
-	}
-
-	@RequestMapping("/usr/article/doModifyReply")
-	@ResponseBody
-	public String doModifyReply(@RequestParam Map<String, Object> param) {
-		int id = Util.getAsInt(param.get("id"));
-		int articleId = Util.getAsInt(param.get("articleId"));
-
-		articleService.modifyReply(param);
-
-		String msg = id + "번 댓글이 수정되었습니다.";
-
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("alert('" + msg + "');");
-		sb.append("location.replace('./detail?id=" + articleId + "');");
-
-		sb.insert(0, "<script>");
-		sb.append("</script>");
-
-		return sb.toString();
-	}
-
-	@RequestMapping("/usr/article/doModifyReplyAjax")
-	@ResponseBody
-	public ResultData doModifyReplyAjax(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req,
-			int id) {
-
-		Member loginedMember = (Member) req.getAttribute("loginedMember");
-		Reply reply = articleService.getReplyById(id);
-
-		if (articleService.actorCanModify(loginedMember, reply) == false) {
-			return new ResultData("F-1", String.format("%d번 댓글을 수정할 권한이 없습니다.", id));
-		}
-
-		Map<String, Object> modfiyReplyParam = Util.getNewMapOf(param, "id", "body");
-		ResultData rd = articleService.modifyReply(modfiyReplyParam);
-
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		model.addAttribute("reply", reply);
-		return rd;
-	}
-
-	@RequestMapping("/usr/article/doWriteReplyAjax")
-	@ResponseBody
-	public ResultData doWriteReplyAjax(@RequestParam Map<String, Object> param, HttpServletRequest request) {
-		Map<String, Object> rsDataBody = new HashMap<>();
-		param.put("memberId", request.getAttribute("loginedMemberId"));
-		int newReplyId = articleService.writeReply(param);
-		rsDataBody.put("replyId", newReplyId);
-
-		return new ResultData("S-1", String.format("%d번 댓글이 생성되었습니다.", newReplyId), rsDataBody);
 	}
 }
