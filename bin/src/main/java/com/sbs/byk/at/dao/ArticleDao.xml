@@ -117,7 +117,7 @@
 
 	<insert id="writeReply" useGeneratedKeys="true" keyProperty="id">
 		INSERT
-		INTO articleReply
+		INTO reply
 		SET regDate = NOW(),
 		updateDate = NOW(),
 		displayStatus = 1,
@@ -125,10 +125,10 @@
 		body = #{body}
 	</insert>
 
-	<select id="getForPrintArticleReplies" parameterType="int"
-		resultType="ArticleReply">
+	<select id="getForPrintReplies" parameterType="int"
+		resultType="Reply">
 		SELECT * FROM
-		articleReply
+		reply
 		WHERE displayStatus = 1
 		AND
 		delStatus != 1
@@ -136,10 +136,10 @@
 		ORDER BY id DESC
 	</select>
 
-	<select id="getForPrintArticleRepliesFrom"
-		resultType="ArticleReply">
+	<select id="getForPrintRepliesFrom"
+		resultType="Reply">
 		SELECT * FROM
-		articleReply
+		reply
 		WHERE displayStatus = 1
 		AND
 		delStatus != 1
@@ -150,7 +150,7 @@
 	</select>
 
 	<update id="deleteReply" parameterType="int">
-		UPDATE articleReply
+		UPDATE reply
 		SET
 		delStatus =
 		1,
@@ -160,11 +160,11 @@
 		#{id}
 	</update>
 
-	<select id="getArticleReplyById" parameterType="int"
-		resultType="ArticleReply">
+	<select id="getReplyById" parameterType="int"
+		resultType="Reply">
 		SELECT *
 		FROM
-		articleReply
+		reply
 		WHERE displayStatus = 1
 		AND
 		delStatus != 1
@@ -172,15 +172,15 @@
 	</select>
 
 	<update id="modifyReply" parameterType="map">
-		UPDATE articleReply
+		UPDATE reply
 		SET
 		body = #{body},
 		updateDate = NOW()
 		WHERE id = #{id}
 	</update>
 
-	<update id="deleteArticleReply">
-		UPDATE articleReply
+	<update id="deleteReply">
+		UPDATE reply
 		SET
 		delStatus =
 		1,
@@ -190,8 +190,8 @@
 		#{id}
 	</update>
 
-	<update id="modifyArticleReply">
-		UPDATE articleReply
+	<update id="modifyReply">
+		UPDATE reply
 		SET
 		body = #{body},
 		updateDate = NOW()

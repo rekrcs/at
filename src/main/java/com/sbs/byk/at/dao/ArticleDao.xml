@@ -116,44 +116,48 @@
 	</select>
 
 	<insert id="writeReply" useGeneratedKeys="true" keyProperty="id">
-		INSERT INTO articleReply
+		INSERT INTO reply
 		SET regDate = NOW(),
 		updateDate = NOW(),
 		body =
 		#{body},
 		memberId = #{memberId},
-		articleId = #{articleId},
+		relId = #{relId},
+		relTypeCode = 'article',
 		displayStatus
 		= 1
 	</insert>
 
-	<select id="getForPrintArticleReplies" parameterType="int"
-		resultType="ArticleReply">
+	<select id="getForPrintReplies" parameterType="int"
+		resultType="Reply">
 		SELECT * FROM
-		articleReply
+		reply
 		WHERE displayStatus = 1
 		AND
 		delStatus != 1
-		AND articleId = #{articleId}
+		AND relId = #{relId}
+		AND relTypeCode = 'article'
 		ORDER BY id DESC
 	</select>
 
-	<select id="getForPrintArticleRepliesFrom"
-		resultMap="articleReply">
-		SELECT AR.*,
+	<select id="getForPrintRepliesFrom" resultMap="reply">
+		SELECT
+		AR.*,
 		M.nickname AS extra__writer
-		FROM articleReply AS AR
+		FROM reply AS AR
 		INNER JOIN member AS M
 		ON AR.memberId = M.id
-		WHERE AR.articleId = #{articleId}
+		WHERE AR.relId = #{relId}
 		AND AR.displayStatus = 1
+		AND AR.delStatus != 1
+		AND AR.relTypeCode = #{relTypeCode}
 		AND AR.id >= #{from}
 		ORDER BY AR.id
 		DESC
 	</select>
 
-	<update id="deleteReply" parameterType="int">
-		UPDATE articleReply
+	<update id="deleteReply">
+		UPDATE reply
 		SET
 		delStatus =
 		1,
@@ -163,11 +167,11 @@
 		#{id}
 	</update>
 
-	<select id="getArticleReplyById" parameterType="int"
-		resultType="ArticleReply">
-		SELECT *
+	<select id="getReplyById" parameterType="int" resultType="Reply">
+		SELECT
+		*
 		FROM
-		articleReply
+		reply
 		WHERE displayStatus = 1
 		AND
 		delStatus != 1
@@ -175,33 +179,16 @@
 	</select>
 
 	<update id="modifyReply" parameterType="map">
-		UPDATE articleReply
+		UPDATE reply
 		SET
-		body = #{body},
+		body =
+		#{body},
 		updateDate = NOW()
 		WHERE id = #{id}
 	</update>
 
-	<update id="deleteArticleReply">
-		UPDATE articleReply
-		SET
-		delStatus =
-		1,
-		delDate = NOW(),
-		displayStatus = 0
-		WHERE id =
-		#{id}
-	</update>
 
-	<update id="modifyArticleReply">
-		UPDATE articleReply
-		SET
-		body = #{body},
-		updateDate =
-		NOW()
-		WHERE id = #{id}
-	</update>
-	
+
 	<resultMap type="Article" id="article">
 		<id property="id" column="id" />
 		<id property="regDate" column="regDate" />
@@ -216,12 +203,13 @@
 		</association>
 	</resultMap>
 
-	<resultMap type="ArticleReply" id="articleReply">
+	<resultMap type="Reply" id="reply">
 		<id property="id" column="id" />
 		<id property="regDate" column="regDate" />
 		<id property="body" column="body" />
 		<id property="memberId" column="memberId" />
-		<id property="articleId" column="articleId" />
+		<id property="relId" column="relId" />
+		<id property="relTypeCode" column="relTypeCode" />
 		<association property="extra" javaType="map">
 			<id property="writer" column="extra__writer" />
 		</association>

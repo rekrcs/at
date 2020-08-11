@@ -65,7 +65,7 @@ loginPw = SHA2('admin', 256),
 
 
 # article 테이블 세팅
-CREATE TABLE articleReply (
+CREATE TABLE reply (
     id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate DATETIME,
     updateDate DATETIME,
@@ -77,11 +77,41 @@ CREATE TABLE articleReply (
     `body` LONGTEXT NOT NULL
 );
 
-# articleReply 테이블에 테스트 데이터 삽입
-INSERT INTO articleReply
+# reply 테이블에 테스트 데이터 삽입
+INSERT INTO reply
 SET regDate = NOW(),
 updateDate = NOW(),
 memberId = 1,
 articleId = 1,
 displayStatus = 1,
 `body` = '내용1';
+
+/* 게시물 댓글을 범용 댓글 테이블로 변경 */
+RENAME TABLE `reply` TO `reply`;
+
+ALTER TABLE `reply` ADD COLUMN `relTypeCode` CHAR(50) NOT NULL AFTER `memberId`,
+CHANGE `articleId` `relId` INT(10) UNSIGNED NOT NULL;
+ALTER TABLE `at`.`reply` ADD INDEX (`relId`, `relTypeCode`);
+UPDATE reply
+SET relTypeCode = 'article'
+WHERE relTypeCode = '';
+
+/* 파일 테이블 생성 */
+CREATE TABLE `file` (
+    id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    regDate DATETIME,
+    updateDate DATETIME,
+    delDate DATETIME,
+	delStatus TINYINT(1) UNSIGNED NOT NULL DEFAULT 0,
+	relTypeCode CHAR(50) NOT NULL,
+	relId INT(10) UNSIGNED NOT NULL,
+    originFileName VARCHAR(100) NOT NULL,
+    fileExt CHAR(10) NOT NULL,
+    typeCode CHAR(20) NOT NULL,
+    type2Code CHAR(20) NOT NULL,
+    fileSize INT(10) UNSIGNED NOT NULL,
+    fileExtTypeCode CHAR(10) NOT NULL,
+    fileExtType2Code CHAR(10) NOT NULL,
+    fileNo TINYINT(2) UNSIGNED NOT NULL,
+    `body` LONGBLOB
+);

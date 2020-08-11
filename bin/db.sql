@@ -41,7 +41,7 @@ FROM article;
 
 # 댓글 테이블 추가		
 # 댓글 테이블 추가		
-CREATE TABLE articleReply (
+CREATE TABLE reply (
     id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate DATETIME,
     updateDate DATETIME,

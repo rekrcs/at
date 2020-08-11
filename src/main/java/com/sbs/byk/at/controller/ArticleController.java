@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dto.Article;
-import com.sbs.byk.at.dto.ArticleReply;
+import com.sbs.byk.at.dto.Reply;
 import com.sbs.byk.at.dto.Member;
 import com.sbs.byk.at.dto.ResultData;
 import com.sbs.byk.at.service.ArticleService;
@@ -25,18 +25,18 @@ public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
 
-	@RequestMapping("/usr/article/getForPrintArticleRepliesRs")
+	@RequestMapping("/usr/article/getForPrintRepliesRs")
 	@ResponseBody
-	public Map<String, Object> getForPrintArticleRepliesRs(@RequestParam Map<String, Object> param,
-			HttpServletRequest req) {
+	public Map<String, Object> getForPrintRepliesRs(@RequestParam Map<String, Object> param, HttpServletRequest req) {
 		Member loginedMember = (Member) req.getAttribute("loginedMember");
 		param.put("actor", loginedMember);
-		List<ArticleReply> articleReplies = articleService.getForPrintArticleReplies(param);
+		param.put("relTypeCode", "article");
+		List<Reply> replies = articleService.getForPrintReplies(param);
 
 		Map<String, Object> rs = new HashMap<>();
 		rs.put("resultCode", "S-1");
-		rs.put("msg", String.format("총 %d개의 댓글이 있습니다.", articleReplies.size()));
-		rs.put("articleReplies", articleReplies);
+		rs.put("msg", String.format("총 %d개의 댓글이 있습니다.", replies.size()));
+		rs.put("replies", replies);
 
 		return rs;
 	}
@@ -74,14 +74,14 @@ public class ArticleController {
 		Article articleNext = articleService.getNextArticle(id);
 
 		Article articlePrevious = articleService.getPreviousArticle(id);
-		List<ArticleReply> articleReplies = articleService.getForPrintArticleReplies(id);
+		List<Reply> replies = articleService.getForPrintReplies(id);
 
 		model.addAttribute("article", article);
 		model.addAttribute("firstId", firstId);
 		model.addAttribute("lastId", lastId);
 		model.addAttribute("articleNext", articleNext);
 		model.addAttribute("articlePrevious", articlePrevious);
-		model.addAttribute("articleReplies", articleReplies);
+		model.addAttribute("replies", replies);
 
 		return "article/detail";
 	}
@@ -194,9 +194,9 @@ public class ArticleController {
 	@ResponseBody
 	public ResultData doDeleteReplyAjax(int id, HttpServletRequest req) {
 		Member loginedMember = (Member) req.getAttribute("loginedMember");
-		ArticleReply articleReply = articleService.getArticleReplyById(id);
+		Reply reply = articleService.getReplyById(id);
 
-		if (articleService.actorCanDelete(loginedMember, articleReply) == false) {
+		if (articleService.actorCanDelete(loginedMember, reply) == false) {
 			return new ResultData("F-1", String.format("%d번 댓글을 삭제할 권한이 없습니다.", id));
 		}
 
@@ -207,9 +207,9 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/modifyReply")
 	public String showModifyReply(Model model, int id) {
-		ArticleReply articleReply = articleService.getArticleReplyById(id);
+		Reply reply = articleService.getReplyById(id);
 
-		model.addAttribute("articleReply", articleReply);
+		model.addAttribute("reply", reply);
 
 		return "article/modifyReply";
 	}
@@ -237,12 +237,13 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/doModifyReplyAjax")
 	@ResponseBody
-	public ResultData doModifyReplyAjax(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req, int id) {
+	public ResultData doModifyReplyAjax(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req,
+			int id) {
 
 		Member loginedMember = (Member) req.getAttribute("loginedMember");
-		ArticleReply articleReply = articleService.getArticleReplyById(id);
-	
-		if (articleService.actorCanModify(loginedMember, articleReply) == false) {
+		Reply reply = articleService.getReplyById(id);
+
+		if (articleService.actorCanModify(loginedMember, reply) == false) {
 			return new ResultData("F-1", String.format("%d번 댓글을 수정할 권한이 없습니다.", id));
 		}
 
@@ -254,7 +255,7 @@ public class ArticleController {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		model.addAttribute("articleReply", articleReply);
+		model.addAttribute("reply", reply);
 		return rd;
 	}
 
@@ -263,9 +264,9 @@ public class ArticleController {
 	public ResultData doWriteReplyAjax(@RequestParam Map<String, Object> param, HttpServletRequest request) {
 		Map<String, Object> rsDataBody = new HashMap<>();
 		param.put("memberId", request.getAttribute("loginedMemberId"));
-		int newArticleReplyId = articleService.writeReply(param);
-		rsDataBody.put("articleReplyId", newArticleReplyId);
+		int newReplyId = articleService.writeReply(param);
+		rsDataBody.put("replyId", newReplyId);
 
-		return new ResultData("S-1", String.format("%d번 댓글이 생성되었습니다.", newArticleReplyId), rsDataBody);
+		return new ResultData("S-1", String.format("%d번 댓글이 생성되었습니다.", newReplyId), rsDataBody);
 	}
 }

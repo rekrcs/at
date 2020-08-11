@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dao.ArticleDao;
 import com.sbs.byk.at.dto.Article;
-import com.sbs.byk.at.dto.ArticleReply;
+import com.sbs.byk.at.dto.Reply;
 import com.sbs.byk.at.dto.Member;
 import com.sbs.byk.at.dto.ResultData;
 
@@ -78,16 +78,16 @@ public class ArticleService {
 		return Util.getAsInt(param.get("id"));
 	}
 
-	public List<ArticleReply> getForPrintArticleReplies(int articleId) {
-		return articleDao.getForPrintArticleReplies(articleId);
+	public List<Reply> getForPrintReplies(int articleId) {
+		return articleDao.getForPrintReplies(articleId);
 	}
 
 	public void deleteReply(int id) {
 		articleDao.deleteReply(id);
 	}
 
-	public ArticleReply getArticleReplyById(int id) {
-		return articleDao.getArticleReplyById(id);
+	public Reply getReplyById(int id) {
+		return articleDao.getReplyById(id);
 	}
 
 	public ResultData modifyReply(Map<String, Object> param) {
@@ -95,54 +95,32 @@ public class ArticleService {
 		return new ResultData("S-1", String.format("%d번 댓글을 수정하였습니다.", Util.getAsInt(param.get("id"))), param);
 	}
 
-	public List<ArticleReply> getForPrintArticleReplies(@RequestParam Map<String, Object> param) {
-		List<ArticleReply> articleReplies = articleDao.getForPrintArticleRepliesFrom(param);
+	public List<Reply> getForPrintReplies(@RequestParam Map<String, Object> param) {
+		List<Reply> replies = articleDao.getForPrintRepliesFrom(param);
 
 		Member actor = (Member) param.get("actor");
 
-		for (ArticleReply articleReply : articleReplies) {
+		for (Reply reply : replies) {
 			// 출력용 부가데이터를 추가한다.
-			updateForPrintInfo(actor, articleReply);
+			updateForPrintInfo(actor, reply);
 		}
 
-		return articleReplies;
+		return replies;
 
 	}
 
-	private void updateForPrintInfo(Member actor, ArticleReply articleReply) {
-		articleReply.getExtra().put("actorCanDelete", actorCanDelete(actor, articleReply));
-		articleReply.getExtra().put("actorCanModify", actorCanModify(actor, articleReply));
+	private void updateForPrintInfo(Member actor, Reply reply) {
+		reply.getExtra().put("actorCanDelete", actorCanDelete(actor, reply));
+		reply.getExtra().put("actorCanModify", actorCanModify(actor, reply));
 	}
 
 	// 액터가 해당 댓글을 수정할 수 있는지 알려준다.
-	public boolean actorCanModify(Member actor, ArticleReply articleReply) {
-		return actor != null && actor.getId() == articleReply.getMemberId() ? true : false;
+	public boolean actorCanModify(Member actor, Reply reply) {
+		return actor != null && actor.getId() == reply.getMemberId() ? true : false;
 	}
 
 	// 액터가 해당 댓글을 삭제할 수 있는지 알려준다.
-	public boolean actorCanDelete(Member actor, ArticleReply articleReply) {
-		return actorCanModify(actor, articleReply);
+	public boolean actorCanDelete(Member actor, Reply reply) {
+		return actorCanModify(actor, reply);
 	}
-
-	public Map<String, Object> deleteArticleReply(int id) {
-		articleDao.deleteArticleReply(id);
-		Map<String, Object> rs = new HashMap<>();
-
-		rs.put("resultCode", "S-1");
-		rs.put("msg", String.format("%d번 게시물 댓글이 삭제되었습니다.", id));
-
-		return rs;
-	}
-
-	public Map<String, Object> modifyArticleReply(Map<String, Object> param) {
-		articleDao.modifyArticleReply(param);
-		int id = Util.getAsInt(param.get("id"));
-		Map<String, Object> rs = new HashMap<>();
-
-		rs.put("resultCode", "S-1");
-		rs.put("msg", String.format("%d번 게시물 댓글이 수정되었습니다.", id));
-
-		return rs;
-	}
-
 }
