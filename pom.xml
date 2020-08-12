@@ -9,7 +9,7 @@
 		<version>2.3.2.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.sbs.byk</groupId>
+	<groupId>com.sbs.jhs</groupId>
 	<artifactId>at</artifactId>
 	<version>1</version>
 	<packaging>war</packaging>
@@ -89,6 +89,7 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 	</dependencies>
 
 	<build>
