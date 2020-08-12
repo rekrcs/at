@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sbs.byk.at.dto.Member;
 import com.sbs.byk.at.service.MemberService;
 
-
 @Component("beforeActionInterceptor") // 컴포넌트 이름 설정
 public class BeforeActionInterceptor implements HandlerInterceptor {
 	@Autowired
@@ -75,9 +74,6 @@ public class BeforeActionInterceptor implements HandlerInterceptor {
 		// 설정 파일에 있는 정보를 request에 담는다.
 		request.setAttribute("logoText", this.siteName);
 		HttpSession session = request.getSession();
-
-		// 임시작업
-		session.setAttribute("loginedMemberId", 1);
 
 		// 로그인 여부에 관련된 정보를 request에 담는다.
 		boolean isLogined = false;
