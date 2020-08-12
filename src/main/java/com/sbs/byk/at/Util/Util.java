@@ -8,8 +8,12 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import com.google.common.cache.LoadingCache;
+import com.sbs.byk.at.dto.File;
 
 public class Util {
 	public static int getAsInt(Object object) {
@@ -133,6 +137,14 @@ public class Util {
 		}
 
 		return null;
+	}
+
+	public static <T extends Object> T getCacheData(LoadingCache cache, int key) {
+		try {
+			return (T) cache.get(key);
+		} catch (ExecutionException e) {
+			return null;
+		}
 	}
 
 }

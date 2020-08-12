@@ -20,22 +20,22 @@ import com.sbs.byk.at.dto.ResultData;
 public class ReplyService {
 	@Autowired
 	private ReplyDao replyDao;
-
 	@Autowired
 	private FileService fileService;
 
 	public List<Reply> getForPrintReplies(@RequestParam Map<String, Object> param) {
-		List<Reply> replies = replyDao.getForPrintRepliesFrom(param);
+		List<Reply> replies = replyDao.getForPrintReplies(param);
 
 		List<Integer> replyIds = replies.stream().map(reply -> reply.getId()).collect(Collectors.toList());
 		if (replyIds.size() > 0) {
-			Map<Integer, File> filesMap = fileService.getFilesMapKeyRelId("reply", replyIds, "common", "attachment", 1);
+			Map<Integer, Map<Integer, File>> filesMap = fileService.getFilesMapKeyRelIdAndFileNo("reply", replyIds,
+					"common", "attachment");
 
 			for (Reply reply : replies) {
-				File file = filesMap.get(reply.getId());
+				Map<Integer, File> filesMap2 = filesMap.get(reply.getId());
 
-				if (file != null) {
-					reply.getExtra().put("file__common__attachment__1", file);
+				if (filesMap2 != null) {
+					reply.getExtra().put("file__common__attachment", filesMap2);
 				}
 			}
 		}
@@ -48,7 +48,6 @@ public class ReplyService {
 		}
 
 		return replies;
-
 	}
 
 	private void updateForPrintInfo(Member actor, Reply reply) {
@@ -72,29 +71,31 @@ public class ReplyService {
 
 		String fileIdsStr = (String) param.get("fileIdsStr");
 
-		List<Integer> fileIds = Arrays.asList(fileIdsStr.split(",")).stream().map(s -> Integer.parseInt(s.trim()))
-				.collect(Collectors.toList());
+		if (fileIdsStr != null && fileIdsStr.length() > 0) {
+			List<Integer> fileIds = Arrays.asList(fileIdsStr.split(",")).stream().map(s -> Integer.parseInt(s.trim()))
+					.collect(Collectors.toList());
 
-		// 파일이 먼저 생성된 후에, 관련 데이터가 생성되는 경우에는, file의 relId가 일단 0으로 저장된다.
-		// 그것을 뒤늦게라도 이렇게 고처야 한다.
-		for (int fileId : fileIds) {
-			fileService.changeRelId(fileId, id);
+			// 파일이 먼저 생성된 후에, 관련 데이터가 생성되는 경우에는, file의 relId가 일단 0으로 저장된다.
+			// 그것을 뒤늦게라도 이렇게 고처야 한다.
+			for (int fileId : fileIds) {
+				fileService.changeRelId(fileId, id);
+			}
 		}
 
 		return id;
+	}
+
+	public void deleteReply(int id) {
+		replyDao.deleteReply(id);
+		fileService.deleteFiles("reply", id);
 	}
 
 	public Reply getForPrintReplyById(int id) {
 		return replyDao.getForPrintReplyById(id);
 	}
 
-	public void deleteReply(int id) {
-		replyDao.deleteReply(id);
-	}
-
 	public ResultData modifyReply(Map<String, Object> param) {
 		replyDao.modifyReply(param);
 		return new ResultData("S-1", String.format("%d번 댓글을 수정하였습니다.", Util.getAsInt(param.get("id"))), param);
 	}
-
 }

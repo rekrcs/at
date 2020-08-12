@@ -15,10 +15,10 @@ public class Reply {
 	private String updateDate;
 	private boolean delStatus;
 	private String delDate;
+	private boolean displayStatus;
 	private int relId;
 	private String relTypeCode;
 	private int memberId;
-	private boolean displayStatus;
 	private String body;
 	private Map<String, Object> extra;
 }

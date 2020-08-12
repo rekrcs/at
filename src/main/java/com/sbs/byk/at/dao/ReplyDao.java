@@ -10,7 +10,7 @@ import com.sbs.byk.at.dto.Reply;
 
 @Mapper
 public interface ReplyDao {
-	List<Reply> getForPrintRepliesFrom(Map<String, Object> param);
+	List<Reply> getForPrintReplies(Map<String, Object> param);
 
 	void writeReply(Map<String, Object> param);
 
@@ -19,4 +19,5 @@ public interface ReplyDao {
 	void deleteReply(@Param("id") int id);
 
 	void modifyReply(Map<String, Object> param);
+
 }

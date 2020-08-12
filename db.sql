@@ -65,7 +65,7 @@ loginPw = SHA2('admin', 256),
 
 
 # article 테이블 세팅
-CREATE TABLE reply (
+CREATE TABLE articleReply (
     id INT(10) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     regDate DATETIME,
     updateDate DATETIME,
@@ -77,8 +77,8 @@ CREATE TABLE reply (
     `body` LONGTEXT NOT NULL
 );
 
-# reply 테이블에 테스트 데이터 삽입
-INSERT INTO reply
+# articleReply 테이블에 테스트 데이터 삽입
+INSERT INTO articleReply
 SET regDate = NOW(),
 updateDate = NOW(),
 memberId = 1,
@@ -87,7 +87,7 @@ displayStatus = 1,
 `body` = '내용1';
 
 /* 게시물 댓글을 범용 댓글 테이블로 변경 */
-RENAME TABLE `reply` TO `reply`;
+RENAME TABLE `articleReply` TO `reply`;
 
 ALTER TABLE `reply` ADD COLUMN `relTypeCode` CHAR(50) NOT NULL AFTER `memberId`,
 CHANGE `articleId` `relId` INT(10) UNSIGNED NOT NULL;
