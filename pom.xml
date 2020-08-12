@@ -9,7 +9,7 @@
 		<version>2.3.2.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.sbs.jhs</groupId>
+	<groupId>com.sbs.byk</groupId>
 	<artifactId>at</artifactId>
 	<version>1</version>
 	<packaging>war</packaging>
@@ -88,6 +88,19 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+
+		<!-- 메일 보내기 위한 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+
+		<!-- 메일 보내기 위한 -->
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
 		</dependency>
 
 	</dependencies>
