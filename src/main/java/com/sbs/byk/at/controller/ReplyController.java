@@ -24,27 +24,27 @@ public class ReplyController {
 	@Autowired
 	private ReplyService replyService;
 
-	@RequestMapping("/usr/reply/getForPrintRepliesRs")
+	@RequestMapping("/usr/reply/getForPrintReplies")
 	@ResponseBody
-	public Map<String, Object> getForPrintRepliesRs(@RequestParam Map<String, Object> param, HttpServletRequest req) {
+	public ResultData getForPrintReplies(@RequestParam Map<String, Object> param, HttpServletRequest req) {
 		Member loginedMember = (Member) req.getAttribute("loginedMember");
-		param.put("actor", loginedMember);
+		Map<String, Object> rsDataBody = new HashMap<>();
+
 		param.put("relTypeCode", "article");
+		param.put("actor", loginedMember);
 		List<Reply> replies = replyService.getForPrintReplies(param);
+		rsDataBody.put("replies", replies);
 
-		Map<String, Object> rs = new HashMap<>();
-		rs.put("resultCode", "S-1");
-		rs.put("msg", String.format("총 %d개의 댓글이 있습니다.", replies.size()));
-		rs.put("replies", replies);
-
-		return rs;
+		return new ResultData("S-1", String.format("%d개의 댓글을 불러왔습니다.", replies.size()), rsDataBody);
 	}
 
 	@RequestMapping("/usr/reply/doWriteReplyAjax")
 	@ResponseBody
 	public ResultData doWriteReplyAjax(@RequestParam Map<String, Object> param, HttpServletRequest request) {
 		Map<String, Object> rsDataBody = new HashMap<>();
+
 		param.put("memberId", request.getAttribute("loginedMemberId"));
+
 		int newReplyId = replyService.writeReply(param);
 		rsDataBody.put("replyId", newReplyId);
 
@@ -55,7 +55,7 @@ public class ReplyController {
 	@ResponseBody
 	public ResultData doDeleteReplyAjax(int id, HttpServletRequest req) {
 		Member loginedMember = (Member) req.getAttribute("loginedMember");
-		Reply reply = replyService.getReplyById(id);
+		Reply reply = replyService.getForPrintReplyById(id);
 
 		if (replyService.actorCanDelete(loginedMember, reply) == false) {
 			return new ResultData("F-1", String.format("%d번 댓글을 삭제할 권한이 없습니다.", id));
@@ -68,11 +68,9 @@ public class ReplyController {
 
 	@RequestMapping("/usr/reply/doModifyReplyAjax")
 	@ResponseBody
-	public ResultData doModifyReplyAjax(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req,
-			int id) {
-
+	public ResultData doModifyReplyAjax(@RequestParam Map<String, Object> param, HttpServletRequest req, int id) {
 		Member loginedMember = (Member) req.getAttribute("loginedMember");
-		Reply reply = replyService.getReplyById(id);
+		Reply reply = replyService.getForPrintReplyById(id);
 
 		if (replyService.actorCanModify(loginedMember, reply) == false) {
 			return new ResultData("F-1", String.format("%d번 댓글을 수정할 권한이 없습니다.", id));
@@ -81,12 +79,6 @@ public class ReplyController {
 		Map<String, Object> modfiyReplyParam = Util.getNewMapOf(param, "id", "body");
 		ResultData rd = replyService.modifyReply(modfiyReplyParam);
 
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		model.addAttribute("reply", reply);
 		return rd;
 	}
 }

@@ -5,21 +5,19 @@
 <mapper namespace="com.sbs.byk.at.dao.ReplyDao">
 
 	<select id="getForPrintRepliesFrom" resultMap="reply">
-		SELECT
-		AR.*,
+		 <![CDATA[
+		SELECT AR.*,
 		M.nickname AS extra__writer
 		FROM reply AS AR
 		INNER JOIN member AS M
-		ON
-		AR.memberId = M.id
+		ON AR.memberId = M.id
 		WHERE AR.relId = #{relId}
-		AND AR.displayStatus = 1
-		AND AR.delStatus != 1
 		AND AR.relTypeCode = #{relTypeCode}
-		AND AR.id >=
-		#{from}
-		ORDER BY AR.id
-		DESC
+		AND AR.displayStatus = 1
+		AND AR.delStatus = 0
+		AND AR.id >= #{from}
+		ORDER BY AR.id ASC
+		]]>
 	</select>
 
 	<insert id="writeReply" useGeneratedKeys="true" keyProperty="id">
@@ -29,14 +27,14 @@
 		body =
 		#{body},
 		memberId = #{memberId},
-		relId = #{relId},
-		relTypeCode =
-		#{relTypeCode},
+		relTypeCode = #{relTypeCode},
+		relId =
+		#{relId},
 		displayStatus
 		= 1
 	</insert>
 
-	<select id="getReplyById" resultType="Reply">
+	<select id="getForPrintReplyById" resultType="Reply">
 		SELECT
 		*
 		FROM

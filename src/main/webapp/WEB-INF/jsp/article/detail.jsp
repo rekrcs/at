@@ -5,54 +5,11 @@
 <c:set var="pageTitle" value="게시물 상세내용" />
 <%@ include file="../part/head.jspf"%>
 
-<script>
-	var Reply__loadListDelay = 1000;
-
-	// 임시
-	Reply__loadListDelay = 5000;
-</script>
 <style>
 a {
 	text-decoration: none;
 	color: inherit;
 }
-
-/* 댓글 ajax화 */
-.article-reply-list-box tr .loading-delete-inline {
-	display: none;
-	font-weight: bold;
-	color: red;
-}
-
-.article-reply-list-box tr[data-loading="Y"] .loading-none {
-	display: none;
-}
-
-.article-reply-list-box tr[data-loading="Y"][data-loading-delete="Y"] .loading-delete-inline
-	{
-	display: inline;
-}
-
-.article-reply-list-box tr[data-modify-mode="Y"] .modify-mode-none {
-	display: none;
-}
-
-.article-reply-list-box tr .modify-mode-inline {
-	display: none;
-}
-
-.article-reply-list-box tr .modify-mode-block {
-	display: none;
-}
-
-.article-reply-list-box tr[data-modify-mode="Y"] .modify-mode-block {
-	display: block;
-}
-
-.article-reply-list-box tr[data-modify-mode="Y"] .modify-mode-inline {
-	display: inline;
-}
-
 /* 게시물 수정 삭제 버튼 시작 */
 .option-box {
 	display: flex;
@@ -92,7 +49,6 @@ a {
 	font-size: 1.2rem;
 	font-weight: bold;
 }
-
 /* 댓글 수정 삭제 버튼 시작 */
 .table-box>table>tbody>tr>td>a {
 	color: blue;
@@ -124,8 +80,8 @@ a {
 			</tr>
 		</tbody>
 	</table>
-
 </div>
+
 <div class="option-box con">
 	<div>
 		<a href="javascript:history.back();"><i class="fas fa-angle-left"></i><i
@@ -168,224 +124,93 @@ a {
 	<h2 class="con">댓글 작성</h2>
 
 	<script>
-		function Reply__submitWriteForm(form) {
+		function ArticleWriteReplyForm__submit(form) {
 			form.body.value = form.body.value.trim();
-
 			if (form.body.value.length == 0) {
 				alert('댓글을 입력해주세요.');
 				form.body.focus();
-
 				return;
 			}
 
-			$.post('./../reply/doWriteReplyAjax', {
-				relId : param.id,
-				relTypeCode : 'article',
-				body : form.body.value
-			}, function(data) {
+			var startUploadFiles = function(onSuccess) {
+				var fileUploadFormData = new FormData(form);
+				fileUploadFormData.delete("relTypeCode");
+				fileUploadFormData.delete("relId");
 
-			}, 'json');
+				$.ajax({
+					url : './../file/doUploadAjax',
+					data : fileUploadFormData,
+					processData : false,
+					contentType : false,
+					dataType:"json",
+					type : 'POST',
+					success : onSuccess
+				});
+			}
 
-			form.body.value = '';
+			var startWriteReply = function(fileIdsStr, onSuccess) {
+				$.ajax({
+					url : './../reply/doWriteReplyAjax',
+					data : {
+						fileIdsStr: fileIdsStr,
+						body: form.body.value,
+						relTypeCode: form.relTypeCode.value,
+						relId: form.relId.value
+					},
+					dataType:"json",
+					type : 'POST',
+					success : onSuccess
+				});
+			};
+
+			startUploadFiles(function(data) {
+				var idsStr = data.body.fileIdsStr;
+				startWriteReply(idsStr, function(data) {
+					form.body.value = '';
+				});
+			});
 		}
 	</script>
 
-	<form action="" class="form1"
-		onsubmit="Reply__submitWriteForm(this); return false;">
-		<div class="table-box con">
-			<table>
-				<tbody>
-					<tr>
-						<th>내용</th>
-						<td>
-							<div class="form-control-box ">
-								<textarea class="min-height-100px" placeholder="내용을 입력해주세요."
-									name="body" maxlength="300"></textarea>
-							</div>
-						</td>
-					</tr>
-					<tr>
-						<th>작성</th>
-						<td>
-							<button class="btn btn-primary" type="submit">작성</button>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+	<form class="table-box con form1"
+		onsubmit="ArticleWriteReplyForm__submit(this); return false;">
+		<input type="hidden" name="relTypeCode" value="article" /> <input
+			type="hidden" name="relId" value="${article.id}" />
+
+		<table>
+			<tbody>
+				<tr>
+					<th>내용</th>
+					<td>
+						<div class="form-control-box">
+							<textarea maxlength="300" name="body" placeholder="내용을 입력해주세요."
+								class="height-300"></textarea>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>첨부1 비디오</th>
+					<td>
+						<div class="form-control-box">
+							<input type="file" accept="video/*" capture
+								name="file__reply__0__common__attachment__1">
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<th>작성</th>
+					<td><input type="submit" value="작성"></td>
+				</tr>
+			</tbody>
+		</table>
 	</form>
+
 </c:if>
 
 
 <h2 class="con">댓글 리스트</h2>
 
-<script>
-	var Reply__lastLoadedReplyId = 0;
-	function Reply__loadList() {
-		$.get('./getForPrintRepliesRs', {
-			relId : param.id,
-			from : Reply__lastLoadedReplyId + 1
-		}, function(data) {
-			data.replies = data.replies.reverse();
-
-			for (var i = 0; i < data.replies.length; i++) {
-				var reply = data.replies[i];
-				Reply__drawReply(reply);
-
-				Reply__lastLoadedReplyId = reply.id;
-			}
-
-			setTimeout(Reply__loadList, Reply__loadListDelay);
-		}, 'json');
-	}
-
-	var Reply__$listTbody;
-
-	function Reply__drawReply(reply) {
-		var html = $('.template-box-1 tbody').html();
-
-		html = replaceAll(html, "{$번호}", reply.id);
-		html = replaceAll(html, "{$날짜}", reply.regDate);
-		html = replaceAll(html, "{$작성자}", reply.extra.writer);
-		html = replaceAll(html, "{$내용}", reply.body);
-
-		/*
-		var html = '';
-
-		html = '<tr data-article-reply-id="' + reply.id + '">';
-		html += '<td>' + reply.id + '</td>';
-		html += '<td>' + reply.regDate + '</td>';
-		html += '<td>' + reply.body + '</td>';
-		html += '<td>';
-		html += '<a href="#">삭제</a>';
-		html += '<a href="#">수정</a>';
-		html += '</td>';
-		html += '</tr>';
-		 */
-		Reply__$listTbody.prepend(html);
-	}
-
-	$(function() {
-		Reply__$listTbody = $('.article-reply-list-box > table tbody');
-
-		Reply__loadList();
-	});
-
-	function Reply__enableModifyMode(obj) {
-		var $clickedBtn = $(obj);
-		var $tr = $clickedBtn.closest('tr');
-
-		var $replyBodyText = $tr.find('.reply-body-text');
-		var $textarea = $tr.find('form textarea');
-
-		$textarea.val($replyBodyText.text().trim());
-
-		$tr.attr('data-modify-mode', 'Y');
-	}
-
-	function Reply__disableModifyMode(obj) {
-		var $clickedBtn = $(obj);
-		var $tr = $clickedBtn.closest('tr');
-
-		$tr.attr('data-modify-mode', 'N');
-	}
-
-	function Reply__submitModifyReplyForm(form) {
-		var $tr = $(form).closest('tr');
-		form.body.value = form.body.value.trim();
-
-		if (form.body.value.length == 0) {
-			alert('댓글내용을 입력 해주세요.');
-			form.body.focus();
-
-			return false;
-		}
-
-		var replyId = parseInt($tr.attr('data-article-reply-id'));
-		var body = form.body.value;
-
-		$tr.attr('data-loading', 'Y');
-		$tr.attr('data-loading-modify', 'Y');
-
-		$.post('./../reply/doModifyReplyAjax', {
-			id : replyId,
-			body : body
-		}, function(data) {
-			$tr.attr('data-loading', 'N');
-			$tr.attr('data-loading-modify', 'N');
-
-			Reply__disableModifyMode(form);
-
-			if (data.resultCode.substr(0, 2) == 'S-') {
-				var $replyBodyText = $tr.find('.reply-body-text');
-				var $textarea = $tr.find('form textarea');
-
-				$replyBodyText.text($textarea.val());
-			} else {
-				if (data.msg) {
-					alert(data.msg)
-				}
-			}
-		});
-	}
-
-	function Reply__delete(obj) {
-		var $clickedBtn = $(obj);
-		var $tr = $clickedBtn.closest('tr');
-
-		var replyId = parseInt($tr.attr('data-article-reply-id'));
-
-		$tr.attr('data-loading', 'Y');
-		$tr.attr('data-loading-delete', 'Y');
-
-		$.post('./../reply/doDeleteReplyAjax', {
-			id : replyId
-		}, function(data) {
-			$tr.attr('data-loading', 'N');
-			$tr.attr('data-loading-delete', 'N');
-
-			if (data.resultCode.substr(0, 2) == 'S-') {
-				$tr.remove();
-			} else {
-				if (data.msg) {
-					alert(data.msg)
-				}
-			}
-		}, 'json');
-	}
-</script>
-
-<div class="template-box template-box-1">
-	<table border="1">
-		<tbody>
-			<tr data-article-reply-id="{$번호}">
-				<td>{$번호}</td>
-				<td>{$날짜}</td>
-				<td>{$작성자}</td>
-				<td>
-					<div class="reply-body-text modify-mode-none">{$내용}</div>
-
-					<div class="modify-mode-block">
-						<form onsubmit="Reply__submitModifyReplyForm(this); return false;">
-							<textarea style="width: 100%; resize: none" maxlength="300"
-								class="min-height-100px" name="body">{$내용}</textarea>
-							<br /> <input class="loading-none" type="submit" value="수정" />
-						</form>
-					</div>
-				</td>
-				<td><span class="loading-delete-inline">삭제중입니다...</span> <a
-					class="loading-none" href="#"
-					onclick="if ( confirm('정말 삭제하시겠습니까?') ) { Reply__delete(this); } return false;">삭제</a>
-					<a class="loading-none modify-mode-none" href="#"
-					onclick="Reply__enableModifyMode(this); return false;">수정</a> <a
-					class="loading-none modify-mode-inline" href="#"
-					onclick="Reply__disableModifyMode(this); return false;">수정취소</a></td>
-			</tr>
-		</tbody>
-	</table>
-</div>
-
-<div class="article-reply-list-box table-box con">
+<div class="reply-list-box table-box con">
 	<table>
 		<colgroup>
 			<col width="80">
@@ -408,6 +233,178 @@ a {
 		</tbody>
 	</table>
 </div>
+
+<style>
+.reply-modify-form-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.4);
+	display: none;
+}
+
+.reply-modify-form-modal-actived .reply-modify-form-modal {
+	display: flex;
+}
+</style>
+
+<div class="reply-modify-form-modal flex flex-ai-c flex-jc-c">
+	<form action="" class="form1 bg-white padding-10"
+		onsubmit="ReplyList__submitModifyForm(this); return false;">
+		<input type="hidden" name="id" />
+		<div class="form-row">
+			<div class="form-control-label">내용</div>
+			<div class="form-control-box">
+				<textarea name="body" placeholder="내용을 입력해주세요."></textarea>
+			</div>
+		</div>
+		<div class="form-row">
+			<div class="form-control-label">수정</div>
+			<div class="form-control-box">
+				<button type="submit">수정</button>
+				<button type="button" onclick="ReplyList__hideModifyFormModal();">취소</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<script>
+	var ReplyList__$box = $('.reply-list-box');
+	var ReplyList__$tbody = ReplyList__$box.find('tbody');
+
+	var ReplyList__lastLodedId = 0;
+
+	var ReplyList__submitModifyFormDone = false;
+
+	function ReplyList__submitModifyForm(form) {
+		if (ReplyList__submitModifyFormDone) {
+			alert('처리중입니다.');
+			return;
+		}
+
+		form.body.value = form.body.value.trim();
+
+		if (form.body.value.length == 0) {
+			alert('내용을 입력해주세요.');
+			form.body.focus();
+
+			return;
+		}
+
+		var id = form.id.value;
+		var body = form.body.value;
+
+		ReplyList__submitModifyFormDone = true;
+		$.post('../reply/doModifyReplyAjax', {
+			id : id,
+			body : body
+		}, function(data) {
+			if (data.resultCode && data.resultCode.substr(0, 2) == 'S-') {
+				// 성공시에는 기존에 그려진 내용을 수정해야 한다.!!
+				var $tr = $('.reply-list-box tbody > tr[data-id="' + id
+						+ '"] .reply-body');
+				$tr.empty().append(body);
+			}
+
+			ReplyList__hideModifyFormModal();
+			ReplyList__submitModifyFormDone = false;
+		}, 'json');
+	}
+
+	function ReplyList__showModifyFormModal(el) {
+		$('html').addClass('reply-modify-form-modal-actived');
+		var $tr = $(el).closest('tr');
+		var originBody = $tr.data('data-originBody');
+
+		var id = $tr.attr('data-id');
+
+		var form = $('.reply-modify-form-modal form').get(0);
+
+		form.id.value = id;
+		form.body.value = originBody;
+	}
+
+	function ReplyList__hideModifyFormModal() {
+		$('html').removeClass('reply-modify-form-modal-actived');
+	}
+
+	function ReplyList__loadMoreCallback(data) {
+		if (data.body.replies && data.body.replies.length > 0) {
+			ReplyList__lastLodedId = data.body.replies[data.body.replies.length - 1].id;
+			ReplyList__drawReplies(data.body.replies);
+		}
+
+		setTimeout(ReplyList__loadMore, 2000);
+	}
+
+	function ReplyList__loadMore() {
+
+		$.get('../reply/getForPrintReplies', {
+			relId : param.id,
+			from : ReplyList__lastLodedId + 1
+		}, ReplyList__loadMoreCallback, 'json');
+	}
+
+	function ReplyList__drawReplies(replies) {
+		for (var i = 0; i < replies.length; i++) {
+			var reply = replies[i];
+			ReplyList__drawReply(reply);
+		}
+	}
+
+	function ReplyList__delete(el) {
+		if (confirm('삭제 하시겠습니까?') == false) {
+			return;
+		}
+
+		var $tr = $(el).closest('tr');
+
+		var id = $tr.attr('data-id');
+
+		$.post('./../reply/doDeleteReplyAjax', {
+			id : id
+		}, function(data) {
+			$tr.remove();
+		}, 'json');
+	}
+
+	function ReplyList__drawReply(reply) {
+		var html = '';
+		html += '<tr data-id="' + reply.id + '">';
+		html += '<td>' + reply.id + '</td>';
+		html += '<td>' + reply.regDate + '</td>';
+		html += '<td>' + reply.extra.writer + '</td>';
+		html += '<td>';
+		html += '<div class="reply-body">' + reply.body + '</div>';
+		if (reply.extra.file__common__attachment__1) {
+            var file = reply.extra.file__common__attachment__1;
+            html += '<video controls src="http://localhost:8085/usr/file/streamVideo?id=' + file.id + '">video not supported</video>';
+        }
+		
+		html += '</td>';
+		html += '<td>';
+
+		if (reply.extra.actorCanDelete) {
+			html += '<button type="button" onclick="ReplyList__delete(this);">삭제</button>';
+		}
+		
+		if (reply.extra.actorCanModify) {
+			html += '<button type="button" onclick="ReplyList__showModifyFormModal(this);">수정</button>';
+		}
+		
+		html += '</td>';
+		html += '</tr>';
+
+		var $tr = $(html);
+		$tr.data('data-originBody', reply.body);
+		ReplyList__$tbody.prepend($tr);
+	}
+
+	ReplyList__loadMore();
+</script>
+
 <div class="backHome">
 	<a href="list">리스트로 돌아가기</a>
 </div>
