@@ -95,21 +95,13 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/usr/article/doWrite")
-	@ResponseBody
 	public String doWrite(@RequestParam Map<String, Object> param) {
 		int newArticleId = articleService.write(param);
 
-		String msg = newArticleId + "번 게시물이 생성되었습니다.";
+		String redirectUri = (String) param.get("redirectUri");
+		redirectUri = redirectUri.replace("#id", newArticleId + "");
 
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("alert('" + msg + "');");
-		sb.append("location.replace('./detail?id=" + newArticleId + "');");
-
-		sb.insert(0, "<script>");
-		sb.append("</script>");
-
-		return sb.toString();
+		return "redirect:" + redirectUri;
 	}
 
 	@RequestMapping("/usr/article/modify")
