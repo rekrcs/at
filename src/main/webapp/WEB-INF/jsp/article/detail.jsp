@@ -114,10 +114,15 @@ a {
 			class="fas fa-angle-left"></i>뒤로가기</a>
 	</div>
 	<div>
-		<span class="option-modify"><a href="modify?id=${article.id}">수정</a></span>
-		<span></span> <span class="option-delete"><a
-			onclick="if ( confirm('게시물을 삭제하시겠습니까?') == false ) return false;"
-			href="doDelete?id=${article.id}">삭제</a></span>
+		<c:if test="${article.extra.actorCanModify}">
+			<span class="option-modify"><a href="modify?id=${article.id}">수정</a></span>
+		</c:if>
+		<span></span>
+		<c:if test="${article.extra.actorCanDelete}">
+			<span class="option-delete"><a
+				onclick="if ( confirm('게시물을 삭제하시겠습니까?') == false ) return false;"
+				href="doDelete?id=${article.id}">삭제</a></span>
+		</c:if>
 	</div>
 </div>
 

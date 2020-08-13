@@ -18,7 +18,8 @@
 		LIMIT #{limitFrom}, #{itemsInAPage}
 	</select>
 
-	<select id="getForPrintArticleById" parameterType="int" resultType="Article">
+	<select id="getForPrintArticleById" parameterType="int"
+		resultType="Article">
 		SELECT *
 		FROM
 		article
@@ -33,7 +34,8 @@
 		updateDate = NOW(),
 		displayStatus = 1,
 		title = #{title},
-		body = #{body}
+		body = #{body},
+		memberId = #{memberId}
 	</insert>
 
 	<update id="modify" parameterType="map">

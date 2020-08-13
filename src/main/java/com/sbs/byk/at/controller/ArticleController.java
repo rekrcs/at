@@ -68,8 +68,11 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/usr/article/detail")
-	public String showDetail(Model model, int id) {
-		Article article = articleService.getForPrintArticleById(id);
+	public String showDetail(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) {
+		int id = Integer.parseInt((String) param.get("id"));
+
+		Member loginedMember = (Member) req.getAttribute("loginedMember");
+		Article article = articleService.getForPrintArticleById(loginedMember, id);
 
 		int firstId = articleService.getFirstIdFromArticle();
 		int lastId = articleService.getLastIdFromArticle();
@@ -95,7 +98,9 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/usr/article/doWrite")
-	public String doWrite(@RequestParam Map<String, Object> param) {
+	public String doWrite(@RequestParam Map<String, Object> param, HttpServletRequest req) {
+		int loginedMemberId = (int) req.getAttribute("loginedMemberId");
+		param.put("memberId", loginedMemberId);
 		int newArticleId = articleService.write(param);
 
 		String redirectUri = (String) param.get("redirectUri");
