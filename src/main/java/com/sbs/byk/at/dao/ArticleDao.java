@@ -14,7 +14,7 @@ public interface ArticleDao {
 	List<Article> getForPrintArticles(int page, int itemsInAPage, int limitFrom, String searchKeyword,
 			String searchKeywordType);
 
-	Article getOne(int id);
+	Article getForPrintArticleById(int id);
 
 	void write(String title, String body);
 

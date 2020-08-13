@@ -69,7 +69,7 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(Model model, int id) {
-		Article article = articleService.getOne(id);
+		Article article = articleService.getForPrintArticleById(id);
 
 		int firstId = articleService.getFirstIdFromArticle();
 		int lastId = articleService.getLastIdFromArticle();
@@ -106,7 +106,7 @@ public class ArticleController {
 
 	@RequestMapping("/usr/article/modify")
 	public String showModify(Model model, int id) {
-		Article article = articleService.getOne(id);
+		Article article = articleService.getForPrintArticleById(id);
 
 		model.addAttribute("article", article);
 

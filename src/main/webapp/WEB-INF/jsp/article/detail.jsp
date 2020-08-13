@@ -78,6 +78,32 @@ a {
 				<th>내용</th>
 				<td>${article.body}</td>
 			</tr>
+			<c:if test="${article.extra.file__common__attachment['1'] != null}">
+				<tr>
+					<th>첨부 파일 1</th>
+					<td>
+						<div class="video-box">
+							<video controls
+								src="/usr/file/streamVideo?id=${article.extra.file__common__attachment['1'].id}">video
+								not supported
+							</video>
+						</div>
+					</td>
+				</tr>
+			</c:if>
+			<c:if test="${article.extra.file__common__attachment['2'] != null}">
+				<tr>
+					<th>첨부 파일 2</th>
+					<td>
+						<div class="video-box">
+							<video controls
+								src="/usr/file/streamVideo?id=${article.extra.file__common__attachment['2'].id}">video
+								not supported
+							</video>
+						</div>
+					</td>
+				</tr>
+			</c:if>
 		</tbody>
 	</table>
 </div>
@@ -228,7 +254,8 @@ a {
 					<th>첨부2 비디오</th>
 					<td>
 						<div class="form-control-box">
-							<input type="file" name="file__reply__0__common__attachment__2">
+							<input type="file" accept="video/*"
+								name="file__reply__0__common__attachment__2">
 						</div>
 					</td>
 				</tr>
@@ -241,7 +268,6 @@ a {
 	</form>
 
 </c:if>
-
 
 <h2 class="con">댓글 리스트</h2>
 
@@ -364,13 +390,16 @@ a {
 		$('html').removeClass('reply-modify-form-modal-actived');
 	}
 
+	// 10초
+	ReplyList__loadMoreInterval = 10 * 1000;
+
 	function ReplyList__loadMoreCallback(data) {
 		if (data.body.replies && data.body.replies.length > 0) {
 			ReplyList__lastLodedId = data.body.replies[data.body.replies.length - 1].id;
 			ReplyList__drawReplies(data.body.replies);
 		}
 
-		setTimeout(ReplyList__loadMore, 2000);
+		setTimeout(ReplyList__loadMore, ReplyList__loadMoreInterval);
 	}
 
 	function ReplyList__loadMore() {
