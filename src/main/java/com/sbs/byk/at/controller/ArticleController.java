@@ -1,6 +1,5 @@
 package com.sbs.byk.at.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,34 +14,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sbs.byk.at.Util.Util;
 import com.sbs.byk.at.dto.Article;
-import com.sbs.byk.at.dto.Reply;
 import com.sbs.byk.at.dto.Member;
+import com.sbs.byk.at.dto.Reply;
 import com.sbs.byk.at.dto.ResultData;
 import com.sbs.byk.at.service.ArticleService;
-import com.sbs.byk.at.service.ReplyService;
 
 @Controller
 public class ArticleController {
 	@Autowired
 	private ArticleService articleService;
-	@Autowired
-	private ReplyService replyService;
-
-	@RequestMapping("/usr/article/getForPrintRepliesRs")
-	@ResponseBody
-	public Map<String, Object> getForPrintRepliesRs(@RequestParam Map<String, Object> param, HttpServletRequest req) {
-		Member loginedMember = (Member) req.getAttribute("loginedMember");
-		param.put("actor", loginedMember);
-		param.put("relTypeCode", "article");
-		List<Reply> replies = replyService.getForPrintReplies(param);
-
-		Map<String, Object> rs = new HashMap<>();
-		rs.put("resultCode", "S-1");
-		rs.put("msg", String.format("총 %d개의 댓글이 있습니다.", replies.size()));
-		rs.put("replies", replies);
-
-		return rs;
-	}
 
 	@RequestMapping("/usr/article/list")
 	public String showList(Model model, String page, String searchKeyword, String searchKeywordType) {
@@ -80,14 +60,12 @@ public class ArticleController {
 		Article articleNext = articleService.getNextArticle(id);
 
 		Article articlePrevious = articleService.getPreviousArticle(id);
-		List<Reply> replies = articleService.getForPrintReplies(id);
 
 		model.addAttribute("article", article);
 		model.addAttribute("firstId", firstId);
 		model.addAttribute("lastId", lastId);
 		model.addAttribute("articleNext", articleNext);
 		model.addAttribute("articlePrevious", articlePrevious);
-		model.addAttribute("replies", replies);
 
 		return "article/detail";
 	}
@@ -110,8 +88,11 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/usr/article/modify")
-	public String showModify(Model model, int id) {
-		Article article = articleService.getForPrintArticleById(id);
+	public String showModify(Model model, @RequestParam Map<String, Object> param, HttpServletRequest req) {
+		int id = Integer.parseInt((String) param.get("id"));
+
+		Member loginedMember = (Member) req.getAttribute("loginedMember");
+		Article article = articleService.getForPrintArticleById(loginedMember, id);
 
 		model.addAttribute("article", article);
 
@@ -119,21 +100,24 @@ public class ArticleController {
 	}
 
 	@RequestMapping("/usr/article/doModify")
-	@ResponseBody
-	public String doModify(@RequestParam Map<String, Object> param, int id) {
-		articleService.modify(param);
+	public String doModify(@RequestParam Map<String, Object> param, HttpServletRequest req, int id, Model model) {
+		Map<String, Object> newParam = Util.getNewMapOf(param, "title", "body", "fileIdsStr", "articleId", "id");
+		Member loginedMember = (Member) req.getAttribute("loginedMember");
 
-		String msg = id + "번 게시물이 수정되었습니다.";
+		ResultData checkActorCanModifyResultData = articleService.checkActorCanModify(loginedMember, id);
 
-		StringBuilder sb = new StringBuilder();
+		if (checkActorCanModifyResultData.isFail()) {
+			model.addAttribute("historyBack", true);
+			model.addAttribute("msg", checkActorCanModifyResultData.getMsg());
 
-		sb.append("alert('" + msg + "');");
-		sb.append("location.replace('./detail?id=" + id + "');");
+			return "common/redirect";
+		}
 
-		sb.insert(0, "<script>");
-		sb.append("</script>");
+		articleService.modify(newParam);
 
-		return sb.toString();
+		String redirectUri = (String) param.get("redirectUri");
+
+		return "redirect:" + redirectUri;
 	}
 
 	@RequestMapping("/usr/article/doDelete")

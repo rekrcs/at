@@ -34,6 +34,6 @@ public interface ArticleDao {
 
 	int getTotalCount(String searchKeyword, String searchKeywordType);
 
-	List<Reply> getForPrintReplies(int articleId);
+	Article getArticleById(@Param("id") int id);
 
 }

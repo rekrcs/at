@@ -27,6 +27,14 @@
 		AND id = #{id}
 	</select>
 
+	<select id="getArticleById" resultType="Article">
+		SELECT *
+		FROM
+		article
+		WHERE
+		id = #{id}
+	</select>
+
 	<insert id="write" useGeneratedKeys="true" keyProperty="id">
 		INSERT
 		INTO article
@@ -38,12 +46,13 @@
 		memberId = #{memberId}
 	</insert>
 
-	<update id="modify" parameterType="map">
+	<update id="modify">
 		UPDATE article
-		SET title =
-		#{title},
-		body = #{body},
-		updateDate = NOW()
+		<set>
+			updateDate = NOW(),
+			<if test="title != null">title = #{title},</if>
+			<if test="body != null">body = #{body},</if>
+		</set>
 		WHERE id = #{id}
 	</update>
 
@@ -143,15 +152,4 @@
 		</association>
 	</resultMap>
 
-	<resultMap type="Reply" id="reply">
-		<id property="id" column="id" />
-		<id property="regDate" column="regDate" />
-		<id property="body" column="body" />
-		<id property="memberId" column="memberId" />
-		<id property="relId" column="relId" />
-		<id property="relTypeCode" column="relTypeCode" />
-		<association property="extra" javaType="map">
-			<id property="writer" column="extra__writer" />
-		</association>
-	</resultMap>
 </mapper>

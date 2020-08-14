@@ -95,4 +95,34 @@ public class FileService {
 		return files;
 	}
 
+	public int getFileId(String relTypeCode, int relId, String typeCode, String type2Code, int fileNo) {
+		Integer id = fileDao.getFileId(relTypeCode, relId, typeCode, type2Code, fileNo);
+
+		if (id == null) {
+			return -1;
+		}
+
+		return id;
+	}
+
+	public void updateFile(int id, String originFileName, String fileExtTypeCode, String fileExtType2Code,
+			String fileExt, byte[] fileBytes, int fileSize) {
+
+		Map<String, Object> param = new HashMap();
+		param.put("originFileName", originFileName);
+		param.put("fileExtTypeCode", fileExtTypeCode);
+		param.put("fileExtType2Code", fileExtType2Code);
+		param.put("fileExt", fileExt);
+		param.put("body", fileBytes);
+		param.put("fileSize", fileSize);
+		param.put("id", id);
+
+		fileDao.update(param);
+
+	}
+
+	public void deleteFile(int id) {
+		fileDao.deleteFile(id);
+	}
+
 }
